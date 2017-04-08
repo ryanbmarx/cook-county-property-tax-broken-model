@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+  {% include "_pymscript.html" %}
+
+  <link rel="stylesheet" type="text/css" href="//{{ ROOT_URL }}/css/styles.css" /> 
+  <style type="text/css">
+    #g-slide1-mobile{display:none}
+    #g-slide1-desktop{display:block}
+
+    #g-slide2-mobile{display:none}
+    #g-slide2-desktop{display:block}
+
+    #g-slide3-mobile{display:none}
+    #g-slide3-desktop{display:block}
+
+    #g-slide4-mobile{display:none}
+    #g-slide4-desktop{display:block}
+
+    #g-slide5-mobile{display:none}
+    #g-slide5-desktop{display:block}
+
+    #g-slide6-mobile{display:none}
+    #g-slide6-desktop{display:block}
+
+    #g-slide7-mobile{display:none}
+    #g-slide7-desktop{display:block}
+
+    @media all and (max-width:579px){
+      #g-slide1-mobile{display:block}
+      #g-slide1-desktop{display:none}
+
+      #g-slide2-mobile{display:block}
+      #g-slide2-desktop{display:none} 
+
+      #g-slide3-mobile{display:block}
+      #g-slide3-desktop{display:none}
+
+      #g-slide4-mobile{display:block}
+      #g-slide4-desktop{display:none}
+
+      #g-slide5-mobile{display:block}
+      #g-slide5-desktop{display:none}
+
+      #g-slide6-mobile{display:block}
+      #g-slide6-desktop{display:none}
+
+      #g-slide7-mobile{display:block}
+      #g-slide7-desktop{display:none}  
+    }
+  </style>
+</head>
+
+<body>
+  <div class="brokenmodel-wrapper">
+    <h1 class="chart_hed">{{broken_model_hed}}</h1>
+
+    
+
+    <div class="slidercontainer">
+      <div class="buttons">
+        <button class="controls" id="previous">&lt;</button>
+        <button class="controls" id="pause">&#10072;&#10072;</button>
+        <button class="controls" id="next">&gt;</button>
+
+        <button class="clockContainer" id="animation">
+          <div class='clockOut'>
+            <div class="clockNeedle"></div>
+          </div>
+        </button>
+
+      </div>
+
+
+    
+      <ul id="slides">
+        <li class="slide showing">
+          <p class="counter">(1/7)</p>
+          {% include "/ai/scatter/ai2html-output/slide1.html" %}
+        </li>
+    
+        <li class="slide">
+          <p class="counter">(2/7)</p>
+          {% include "/ai/scatter/ai2html-output/slide2.html" %}
+        </li>
+    
+        <li class="slide">
+          <p class="counter">(3/7)</p>
+          {% include "/ai/scatter/ai2html-output/slide3.html" %}
+        </li>
+
+        <li class="slide">
+          <p class="counter">(4/7)</p>
+          {% include "/ai/scatter/ai2html-output/slide4.html" %}
+        </li>
+
+        <li class="slide">
+          <p class="counter">(5/7)</p>
+          {% include "/ai/scatter/ai2html-output/slide5.html" %}
+        </li>
+
+        <li class="slide">
+          <p class="counter">(6/7)</p>
+          {% include "/ai/scatter/ai2html-output/slide6.html" %}
+        </li>
+
+        <li class="slide">
+          <p class="counter">(7/7)</p>
+          {% include "/ai/scatter/ai2html-output/slide7.html" %}
+        </li>
+
+
+      </ul>
+  </div>
+
+              {# 
+        This methodology link needs the href to point to the chart's unique ID, which can be found in this spreadsheet tab: https://docs.google.com/spreadsheets/d/1CDBifEOKDp5wc-uZjRDJlYTuiSvNE2pdbDNd2OPusyY/edit#gid=966913298
+       #}
+      <a id='methodology-link' href='#broken-model' class='methodology-link'>Methodology</a>
+
+</div>
+  
+
+  <script type="text/javascript">
+      var controls = document.querySelectorAll('.controls');
+  for(var i=0; i<controls.length; i++){
+    controls[i].style.display = 'inline-block';
+  }
+
+  var slides = document.querySelectorAll('#slides .slide');
+  var currentSlide = 0;
+  var slideLength = 4000;
+  var slideInterval = setInterval(nextSlide,slideLength);
+  var showme = document.getElementById('animation');
+
+  function nextSlide(){
+    goToSlide(currentSlide+1);
+  }
+
+  function previousSlide(){
+    goToSlide(currentSlide-1);
+  }
+
+  function goToSlide(n){
+    slides[currentSlide].className = 'slide';
+    currentSlide = (n+slides.length)%slides.length;
+    slides[currentSlide].className = 'slide showing';
+  }
+
+
+  var playing = true;
+  var pauseButton = document.getElementById('pause');
+
+
+  function pauseSlideshow(){
+    pauseButton.innerHTML = '&#9658;'; // play character
+    playing = false;
+    clearInterval(slideInterval);
+    showme.style.display = 'none';
+  }
+
+  function playSlideshow(){
+    pauseButton.innerHTML = '&#10072;&#10072;'; // pause character
+    playing = true;
+    slideInterval = setInterval(nextSlide,slideLength); 
+    showme.style.display = '';
+  }
+
+  pauseButton.onclick = function(){
+    if(playing){ 
+      pauseSlideshow();
+      showme.style.display = 'none';
+    }
+    else{ playSlideshow(); }
+  };
+
+  var next = document.getElementById('next');
+  var previous = document.getElementById('previous');
+
+  next.onclick = function(){
+    pauseSlideshow();
+    nextSlide();
+  };
+  previous.onclick = function(){
+    pauseSlideshow();
+    previousSlide();
+  };
+
+
+
+  </script>
+</body>
+</html>

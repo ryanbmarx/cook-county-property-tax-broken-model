@@ -1,0 +1,89 @@
+// Enables for Tribune colors, but is required for everything.
+@import 'base-variables';
+
+// ---- ADD MORE VARIABLES HERE ---------------------------------------------
+$tablet-max-width:649px;
+$mobile-max-width:449px;
+
+
+// Required for everything, too, but can be broken down into smaller explicit imports if desired. 
+@import 'base-mixins';
+
+// ---- MAKE OR IMPORT MORE MIXINS HERE ---------------------------------------------
+
+
+// Class imports. Uncomment the ones you want to use.
+// @import 'ngux-visibility-toggles';
+// @import 'trib-bulletbox';
+// @import 'trib-buttons';
+// @import 'trib-colors';
+// @import 'trib-images-charts';
+// @import 'trib-legends';
+// @import 'trib-skeleton';
+// @import 'trib-tables';
+// @import 'trib-timeline-basic';
+// @import 'trib-typography';
+// @import 'trib-utilities';
+
+
+// ---- IMPORT PROJECT STYLES FROM PARTIAL FILES HERE ---------------------------------------------
+@import 'scatter-slides';
+
+// ---- WRITE MORE PROJECT STYLES HERE ---------------------------------------------
+
+body{
+	// Sometimes browsers will apply a little margin to a <body>. For
+	// that oh-so-perfect alignment, we should make sure it is not there.
+	margin:0;
+}
+
+.blurbwrapper .g-artboard{margin: 0px;}
+
+.chart_hed{
+	@include sans-serif-text(23px, 1.3em, bold);
+	margin-bottom:10px;
+	margin-top:0px;
+}
+
+.chart_subhed{
+	@include serif-text(15px, 24px );
+	max-width:580px;
+	margin-top:0px;
+}
+
+
+.methodology-link{
+	@include agate();
+	margin-top:15px;
+  text-decoration:none;
+
+  &:hover{
+    text-decoration: none;
+  }
+}
+
+
+
+
+@media all and (max-width: $tablet-max-width){
+
+}
+
+
+@media all and (max-width: $mobile-max-width){
+  .chart_hed{
+    @include sans-serif-text(19px, 1.4em, bold);
+    text-align: center;
+  }
+
+  .chart_subhed{
+    max-width:270px;
+    text-align:center;
+    display:block;
+    margin-left:auto;
+    margin-right:auto;
+  }
+
+  .blurbwrapper .g-artboard{margin: 0 auto;}
+  .brokenmodel-wrapper .g-artboard{margin: 0 auto;}
+}

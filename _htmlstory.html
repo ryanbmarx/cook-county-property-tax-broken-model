@@ -1,0 +1,32 @@
+{#
+ # Template for an HTML story published to P2P.
+ #
+ # If you want to publish multiple HTML stories, copy, or inherit from
+ # this template.
+ #
+ #}
+{% block content %}
+{% endblock content %}
+
+{% block library_scripts %}
+{# Uncomment this if you are using libraries such as jQuery #}
+{# <script src="//{{ ROOT_URL }}/js/vendor.min.js"></script> #}
+{% endblock %}
+
+{% block scripts %}
+{# Uncomment this if you are using custom JavaScript #}
+{# <script src="//{{ ROOT_URL }}/js/app.min.js"></script> #}
+<script>
+(function(document) {
+  var CSS = [
+    "//{{ ROOT_URL }}/css/styles.css"
+  ];
+  CSS.forEach(function(url) {
+    var link = document.createElement('link');
+    link.setAttribute('rel', 'stylesheet');
+    link.setAttribute('href', url);
+    document.head.appendChild(link);
+  });
+})(document);
+</script>
+{% endblock scripts %}
