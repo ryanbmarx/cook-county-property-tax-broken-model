@@ -108,6 +108,10 @@ class scatterplot{
 		// 	.style('fill', 'blue')
 		// 	.style('opacity', '.2');
 
+		app.data.forEach( (data, index) => {
+			app.plotRegressionLine(data.data, 'HomePrice', 'Ratio', index);
+		})
+
 		app.plotDots(app.options.initialIndex)
 	}
 
@@ -123,45 +127,57 @@ class scatterplot{
 
 		dots.enter()
 			.append('circle')
-			.attr('r', 2)
-			.style('fill', getTribColors('trib-blue2'))
+			.attr('r', 3)
+			// .style('fill', getTribColors('trib-blue2'))
 			.style('opacity', '.2')
 			.attr('cx', d => app.xScale(d.HomePrice))
-			.attr('cy', d => app.yScale(d.Ratio));
+			.attr('cy', d => app.yScale(d.Ratio))
+			.attr('fill', d => {
+				console.log(d.Ratio);
+				return d.Ratio > 1 ? getTribColors('trib-red2') : getTribColors('trib-orange');
+			});
 		
 		dots
 			.transition()
 			.duration(transitionDuration)
 			.attr('cx', d => app.xScale(d.HomePrice))
 			.attr('cy', d => app.yScale(d.Ratio))
+			.attr('fill', d => {
+				console.log(d.Ratio);
+				return d.Ratio > 1 ? getTribColors('trib-red2') : getTribColors('trib-orange');
+			})
 		
 		dots.exit()
 			.transition()
 			.duration(transitionDuration)
 			.style('opacity', 0)
 			.remove();
+	}
 
 
-		const XaxisData = data.map(function(d) { return parseInt(d.HomePrice); });
-		const YaxisData = data.map(function(d) { return parseFloat(d.Ratio); });
+	plotRegressionLine(data, xDataField, yDataField, lineID){
+		// This holds logic to create a regression line. Needs a better method, but it draws a line
+		const app = this;
+		const XaxisData = data.map(function(d) { return parseInt(d[xDataField]); });
+		const YaxisData = data.map(function(d) { return parseFloat(d[yDataField]); });
 		
 		const regression = leastSquaresequation(XaxisData,YaxisData);
-		// console.log(regression, regression(100000));
+
 		const regressionLine = d3.line()
 	        .y(function(d) { return app.yScale(regression(d.HomePrice)) })
 	        .x(function(d) { return app.xScale(d.HomePrice) });
 
 		app.chartInner.append("path")
+			.classed('regression-line', true)
+			.classed(`regression-line--${lineID}`, true)
 	        .datum(data)
 	        .style('stroke', getTribColors('trib-grey2'))
 	        .style('stroke-width', 2)
-	        .style('stroke-dasharray', '3,5')
+	        // .style('stroke-dasharray', '3,5')
 	        .style('fill', 'transparent')
-	        .attr("class", "line")
 	        .attr("d", regressionLine);
 	}
 }
-
 // This function creates a least-squares regression line
 function leastSquaresequation(XaxisData, Yaxisdata) {
 	// console.log(XaxisData, Yaxisdata);

@@ -3,6 +3,7 @@
 <head>
     <title></title>
 {#     {% include '_pymscript.html' %} #}
+    <link rel="stylesheet" href="https://use.fontawesome.com/6745e48e70.css">
     <link rel="stylesheet" href="//{{ ROOT_URL }}/css/styles.css">
     <script src="//{{ ROOT_URL }}/js/vendor.min.js"></script>
     <script>
@@ -14,16 +15,25 @@
 <div class="graphic-wrapper">
 	<h1 class='chart_hed'>XXXXXXXX</h1>
     <div class='data-buttons'>
-    	<button class='data-button' data-direction='back'>&lt;</button>
-        <button class='data-button' data-direction='forward'>&gt;</button>
-        <button class='data-button' data-direction='play'>O</button>
-        <button class='data-button' data-direction='restart'>X</button>
+    	<button class='data-button' data-direction='back'>
+            <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        </button>
+        <button class='data-button' data-direction='forward'>
+            <i class="fa fa-chevron-right" aria-hidden="true"></i>
+        </button>
+        <button class='data-button' data-direction='play'>
+            <i class="fa fa-play-circle" aria-hidden="true"></i>
+        </button>
+        <button class='data-button' data-direction='restart'>
+            <i class="fa fa-refresh" aria-hidden="true"></i>
+        </button>
     </div>
     <div class='progress-bar'>
         <div class='progress-bar__bar'></div>
+        <div class='progress-bar__dot'></div>
     </div>
     <div class='broken-model'>
-        <div id='broken-model' class='broken-model'></div>
+        <div id='broken-model' class='broken-model__chart'></div>
         {% for text in slidetext|sort(attribute="slidenum") if text.publish == 1 %}
             <div id='text{{ text.slidenum }}' class='text {% if loop.first %}text--visible {% endif %}'>
                 <span class='text__number'>{{ text.slidenum }}</span>
