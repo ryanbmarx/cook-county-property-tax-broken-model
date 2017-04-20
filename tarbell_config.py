@@ -1,5 +1,16 @@
 # -*- coding: utf-8 -*-
 
+from flask import Blueprint, Response, g
+
+blueprint = Blueprint('property-tax-assessments-broken-model-scatterplots', __name__)
+
+@blueprint.app_template_filter('get_length')
+def get_length(thing):
+	return len(thing)
+
+
+
+
 """
 Tarbell project configuration
 """
