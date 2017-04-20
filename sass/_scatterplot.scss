@@ -1,0 +1,48 @@
+$chart-height:500px;
+$number-height: 15px;
+$chart-background:$trib-gray4;
+
+.broken-model{
+	background:$chart-background;
+	height:$chart-height;
+	max-width:$chart-height * 1.2;
+	position:relative;
+}
+
+.text{
+	position: absolute;
+	top:0;
+	right:0;
+	max-width: 280px;
+	padding: 20px;
+	opacity:0;
+	transition: opacity 200ms ease;
+	background:$chart-background;
+
+	// &--visible{
+	// 	display: block;
+	// }
+
+	p{
+		@include sans-serif();
+		margin:0;
+		padding:0;
+	}
+	
+	&__number{
+		display:none;
+	}
+}
+
+
+// This sets each text blob to appear when a certain body[data-attribute] is present
+@for $i from 1 to 100{
+	body[data-slide='#{$i}'] #text#{$i}{
+		opacity: 1;
+	}
+}
+
+.ratio-1axis-label{
+	@include agate();
+	font-weight:bold;
+}
