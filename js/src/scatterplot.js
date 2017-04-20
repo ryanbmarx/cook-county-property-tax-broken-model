@@ -123,7 +123,7 @@ class scatterplot{
 
 		dots.enter()
 			.append('circle')
-			.attr('r', 5)
+			.attr('r', 2)
 			.style('fill', getTribColors('trib-blue2'))
 			.style('opacity', '.2')
 			.attr('cx', d => app.xScale(d.HomePrice))

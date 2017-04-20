@@ -11,10 +11,17 @@
     </script>
 </head>
 <body data-slide=1>
+<div class="graphic-wrapper">
 	<h1 class='chart_hed'>XXXXXXXX</h1>
-	<button class='data-button' data-direction='back'>&lt;</button>
-    <button class='data-button' data-direction='play'>O</button>
-    <button class='data-button' data-direction='forward'>&gt;</button>
+    <div class='data-buttons'>
+    	<button class='data-button' data-direction='back'>&lt;</button>
+        <button class='data-button' data-direction='forward'>&gt;</button>
+        <button class='data-button' data-direction='play'>O</button>
+        <button class='data-button' data-direction='restart'>X</button>
+    </div>
+    <div class='progress-bar'>
+        <div class='progress-bar__bar'></div>
+    </div>
     <div class='broken-model'>
         <div id='broken-model' class='broken-model'></div>
         {% for text in slidetext|sort(attribute="slidenum") if text.publish == 1 %}
@@ -26,6 +33,7 @@
         
 	</div>
 	<a>TODO: Add methods link</a>
+</div>
 	<script src="//{{ ROOT_URL }}/js/app.min.js"></script>
 </body>
 </html>

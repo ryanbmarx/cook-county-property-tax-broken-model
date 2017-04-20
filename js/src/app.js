@@ -35,6 +35,10 @@ let dataSets =[
 ];
 
 function slideInstructions(slideNumber, brokenModel){
+	const bar = document.querySelector('.progress-bar__bar')
+	
+	bar.style.width = `${100 / window.totalSlides * slideNumber}%`;
+
 	switch (slideNumber) {
 		case 1:
 			console.log('1');

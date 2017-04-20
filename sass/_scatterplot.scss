@@ -1,11 +1,16 @@
 $chart-height:500px;
 $number-height: 15px;
-$chart-background:$trib-gray4;
+$chart-background:white;
+
+.graphic-wrapper{
+	max-width:650px;
+	margin:0 auto;
+}
+
 
 .broken-model{
 	background:$chart-background;
 	height:$chart-height;
-	max-width:$chart-height * 1.2;
 	position:relative;
 }
 
@@ -45,4 +50,44 @@ $chart-background:$trib-gray4;
 .ratio-1axis-label{
 	@include agate();
 	font-weight:bold;
+}
+
+.data-buttons{
+	display:flex;
+	flex-wrap:wrap;
+	justify-content:space-between;
+	width:200px;
+	
+	.data-button{
+		width:48%;
+		margin-bottom:2%;
+		display:block;
+		background:$trib-gray3;
+		border:none;
+		border-radius:none;
+		cursor:pointer;
+		transition: background 400ms ease;
+
+		&:hover{
+			background: $trib-blue2;
+			transition: background 400ms ease; 
+		}
+	}
+}
+
+.progress-bar{
+	width:100%;
+	height:3px;
+	position:relative;
+	background:#eaeaea;
+
+	&__bar{
+		position:absolute;
+		top:0;
+		left:0;
+		height:100%;
+		background:$trib-blue2;
+		transition:width 400ms ease;
+	}
+
 }
