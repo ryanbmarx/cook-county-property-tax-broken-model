@@ -8,8 +8,9 @@ class scatterplot{
 		app.options = options;
 		app.data = app.options.data;
 		app.dataToChart = app.data[app.options.initialIndex].data;
-
+console.log(app.options);
 		app.initChart(app.dataToChart);
+
 	}
 
 	initChart(){
@@ -65,6 +66,14 @@ class scatterplot{
         	.attr('transform', `translate(${margin.left},${margin.top})`)
         	.call(yAxis);
 
+		const grid = svg.append('g')
+			.classed('grid', true)
+			.attr("width",innerWidth)
+			.attr("height",innerHeight)
+			.attr(`transform`,`translate(${ margin.left }, ${ margin.top })`);
+
+		// console.log(xAxis.ticks(10));
+
 		app.chartInner = svg.append('g')
 			.classed('chartInner', true)
 			.attr("width",innerWidth)
@@ -81,32 +90,83 @@ class scatterplot{
 	        .style('stroke-width', 4)
 	        .style('fill', 'transparent');
 
-		app.chartInner.append('text')
-			.classed('ratio-1axis-label', true)
-			.attr('x', innerWidth)
-			.attr('y', app.yScale(1))
-			.attr('dy', "-0.6em")
-			.text('Overvalued')
-			.attr('text-anchor', 'end')
 
-		app.chartInner.append('text')
-			.classed('ratio-1axis-label', true)
-			.attr('x', innerWidth)
-			.attr('y', app.yScale(1))
-			.attr('dy', "1.3em")
-			.text('Undervalued')
-			.attr('text-anchor', 'end')
+			// THE LABELING
 
-		// const dots = chartInner
-		// 	.selectAll('circle')
-		// 	.data(app.dataToChart)
-		// 	.enter()
-		// 	.append('circle')
-		// 	.attr('r', 5)
-		// 	.attr('cx', d => app.xScale(d.HomePrice))
-		// 	.attr('cy', d => app.yScale(d.Ratio))
-		// 	.style('fill', 'blue')
-		// 	.style('opacity', '.2');
+			const labels = svg.append('g')
+				.classed('labels', true);
+
+
+			// white strokes
+			labels.append('text')
+				.classed('ratio-1axis-label', true)
+				.attr('x', margin.left + 10 )
+				.attr('y', app.yScale(1))
+				.attr('dy', "0.1em")
+				.text('Overvalued')
+				.attr('text-anchor', 'start')
+				.attr('stroke','white')
+				.attr('stroke-width', 3);
+
+			labels.append('text')
+				.classed('ratio-1axis-label', true)
+				.attr('x', margin.left + 10)
+				.attr('y', app.yScale(1))
+				.attr('dy', "2.1em")
+				.text('Undervalued')
+				.attr('text-anchor', 'start')
+				.attr('stroke','white')
+				.attr('stroke-width', 3);
+
+
+			// regular,readable ones
+			
+			labels.append('text')
+				.classed('ratio-1axis-label', true)
+				.attr('x', margin.left + 10 )
+				.attr('y', app.yScale(1))
+				.attr('dy', "0.1em")
+				.text('Overvalued')
+				.attr('text-anchor', 'start')
+
+
+			labels.append('text')
+				.classed('ratio-1axis-label', true)
+				.attr('x', margin.left + 10)
+				.attr('y', app.yScale(1))
+				.attr('dy', "2.1em")
+				.text('Undervalued')
+				.attr('text-anchor', 'start');
+
+
+
+
+			if (app.options.meta.yAxisLabel){
+				labels.append('text')
+					.attr('class', 'class-label class-label--y')
+					.text(app.options.meta.yAxisLabel)
+					.style('font-family','Arial, sans-serif')
+					.style('font-size','13px')
+					.style('font-weight','bold')
+					.attr('x', 0)
+					.attr('y', margin.top + (innerHeight / 2))
+					.attr('text-anchor', 'middle')
+					.attr('dy', '1em')
+					.attr('transform', `rotate(-90, 0, ${margin.top + (innerHeight / 2)})`);
+			}
+
+			if (app.options.meta.xAxisLabel){
+				labels.append('text')
+						.attr('class','class-label class-label--x')
+						.text(app.options.meta.xAxisLabel)
+						.style('font-family','Arial, sans-serif')
+						.style('font-size','13px')
+						.style('font-weight','bold')
+						.attr('x', margin.left + (innerWidth / 2))
+						.attr('y', height)
+						.attr('dy', '-.3em')
+						.attr('text-anchor', 'middle');
+			}
 
 		app.data.forEach( (data, index) => {
 			app.plotRegressionLine(data.data, 'HomePrice', 'Ratio', index);
@@ -119,7 +179,6 @@ class scatterplot{
 		const app = this;
 		const transitionDuration = 1000;
 		const data = app.data[index].data;
-		// console.log(index, data);
 
 		const dots = app.chartInner
 			.selectAll('circle')
@@ -133,7 +192,6 @@ class scatterplot{
 			.attr('cx', d => app.xScale(d.HomePrice))
 			.attr('cy', d => app.yScale(d.Ratio))
 			.attr('fill', d => {
-				console.log(d.Ratio);
 				return d.Ratio > 1 ? getTribColors('trib-red2') : getTribColors('trib-orange');
 			});
 		
@@ -143,7 +201,6 @@ class scatterplot{
 			.attr('cx', d => app.xScale(d.HomePrice))
 			.attr('cy', d => app.yScale(d.Ratio))
 			.attr('fill', d => {
-				console.log(d.Ratio);
 				return d.Ratio > 1 ? getTribColors('trib-red2') : getTribColors('trib-orange');
 			})
 		
@@ -180,7 +237,6 @@ class scatterplot{
 }
 // This function creates a least-squares regression line
 function leastSquaresequation(XaxisData, Yaxisdata) {
-	// console.log(XaxisData, Yaxisdata);
     var ReduceAddition = function(prev, cur) { return prev + cur; };
     
     // finding the mean of Xaxis and Yaxis data

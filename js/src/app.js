@@ -91,10 +91,16 @@ window.addEventListener('load', function(e){
 
 		const brokenModel = new scatterplot({
 			container:document.getElementById('broken-model'),
-			innerMargins:{ top: 10, right:10, bottom:25, left:25 },
+			innerMargins:{ top: 10, right:10, bottom:40, left:50 },
 			data:dataSets, // an array of objects with the datasets inside it
-			initialIndex: 2
+			initialIndex: 2, // Index of the data
+			meta:{
+				xAxisLabel: window.xAxisLabel,
+				yAxisLabel: window.yAxisLabel
+			}
 		});
+        
+		slideInstructions(1, brokenModel);
 
 		const dataButtons = document.querySelectorAll('.data-button');
 		for (var button of dataButtons){

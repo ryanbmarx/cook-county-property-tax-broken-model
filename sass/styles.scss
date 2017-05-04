@@ -4,6 +4,9 @@
 // ---- ADD MORE VARIABLES HERE ---------------------------------------------
 $tablet-max-width:649px;
 $mobile-max-width:449px;
+$tablet-min-width:450px;
+$desktop-min-width:850px;
+
 
 
 // Required for everything, too, but can be broken down into smaller explicit imports if desired. 
@@ -52,6 +55,11 @@ body{
 	margin-top:0px;
 }
 
+.chatter{
+  p{
+    @include sans-serif();
+  }
+}
 
 .methodology-link{
 	@include agate();
@@ -64,7 +72,12 @@ body{
 }
 
 
-
+.class-label{
+  @include sans-serif-text(14px, 1em, bold);
+  // font-weight: bold;
+  &--y{}
+  &--x{}
+} 
 
 @media all and (max-width: $tablet-max-width){
 
