@@ -8,12 +8,17 @@
     <script src="//{{ ROOT_URL }}/js/vendor.min.js"></script>
     <script>
     	window.ROOT_URL = "{{ ROOT_URL }}";
+        window.xAxisLabel = "{{ x_axis_label }}";
+        window.yAxisLabel = "{{ y_axis_label }}";
         window.totalSlides = {{ slidetext|get_length }};
     </script>
 </head>
 <body data-slide=1>
-<div class="graphic-wrapper">
-	<h1 class='chart_hed'>XXXXXXXX</h1>
+<div class="graphic-wrapper" style='border:1px dashed #aaa'>
+	<h1 class='chart_hed'>{{ headline }}</h1>
+    <div class='chatter'>
+        {{ chatter|markdown }}
+    </div>
     <div class='data-buttons'>
     	<button class='data-button' data-direction='back'>
             <i class="fa fa-chevron-left" aria-hidden="true"></i>
