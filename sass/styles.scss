@@ -71,14 +71,6 @@ body{
   }
 }
 
-
-.class-label{
-  @include sans-serif-text(14px, 1em, bold);
-  // font-weight: bold;
-  &--y{}
-  &--x{}
-} 
-
 @media all and (max-width: $tablet-max-width){
 
 }
