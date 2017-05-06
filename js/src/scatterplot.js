@@ -8,8 +8,9 @@ class scatterplot{
 		app.options = options;
 		app.data = app.options.data;
 		app.dataToChart = app.data[app.options.initialIndex].data;
-console.log(app.options);
+
 		app.initChart(app.dataToChart);
+		// app.doesTheChartNeedAnExampleLabeled = true;
 
 	}
 
@@ -22,9 +23,6 @@ console.log(app.options);
 				margin= app.options.innerMargins,
 				innerHeight = height - margin.top - margin.bottom,
 				innerWidth = width - margin.right - margin.left;
-
-		
-
 
 		// ----------------------------------
 		// custom scales
@@ -138,9 +136,6 @@ console.log(app.options);
 				.text('Undervalued')
 				.attr('text-anchor', 'start');
 
-
-
-
 			if (app.options.meta.yAxisLabel){
 				labels.append('text')
 					.attr('class', 'class-label class-label--y')
@@ -168,11 +163,56 @@ console.log(app.options);
 						.attr('text-anchor', 'middle');
 			}
 
-		app.data.forEach( (data, index) => {
-			app.plotRegressionLine(data.data, 'HomePrice', 'Ratio', index);
-		})
+		// app.data.forEach( (data, index) => {
+		// 	app.plotRegressionLine(data.data, 'HomePrice', 'Ratio', index);
+		// })
 
 		app.plotDots(app.options.initialIndex)
+
+		// Add an example to be labeled
+		
+		const 	exampleRatio = 1.8,
+				exampleMarketValue = 150000,
+				exampleCircleRadius = 4,
+				exampleCircleStrokeWidth = 2,
+				exampleLineLength = 25;
+
+		// First the example circle
+		labels.append('circle')
+			.classed('example', true)
+			.classed('example__circle', true)
+			.classed('example--visible', true)
+			.attr('r', exampleCircleRadius)
+			.attr('cx', app.xScale(exampleMarketValue))
+			.attr('cy', app.yScale(exampleRatio))
+			.attr('fill', getTribColors('trib-orange'))
+			.attr('stroke', 'black')
+			.attr('stroke-width', exampleCircleStrokeWidth);
+
+		labels.append('path')
+			.classed('example', true)
+			.classed('example__line', true)
+			.classed('example--visible', true)
+			.attr('d', function(){
+				return `M${app.xScale(exampleMarketValue) + exampleCircleRadius},${app.yScale(exampleRatio)} 
+						Q${app.xScale(exampleMarketValue) + exampleCircleRadius + 19}, ${app.yScale(exampleRatio)}  
+						${app.xScale(exampleMarketValue) + exampleCircleRadius + 19}, ${app.yScale(exampleRatio) + 15}`;
+			})
+			.style('stroke', 'black')
+			.style('stroke-width', 2)
+			.style('fill', 'transparent');
+
+		labels.append('text')
+			.classed('example', true)
+			.classed('example__text', true)
+			.classed('example--visible', true)
+			.text('One circle = one home')
+			.attr('x', app.xScale(exampleMarketValue) + 5)
+			.attr('y', app.yScale(exampleRatio) + exampleCircleRadius + 20)
+			.style('font-family','Arial, sans-serif')
+			.style('font-size','13px')
+			.style('font-weight','bold');
+
 	}
 
 	plotDots(index){
@@ -191,6 +231,8 @@ console.log(app.options);
 			.style('opacity', '.2')
 			.attr('cx', d => app.xScale(d.HomePrice))
 			.attr('cy', d => app.yScale(d.Ratio))
+			.transition()
+			.duration(transitionDuration)
 			.attr('fill', d => {
 				return d.Ratio > 1 ? getTribColors('trib-red2') : getTribColors('trib-orange');
 			});
@@ -212,54 +254,54 @@ console.log(app.options);
 	}
 
 
-	plotRegressionLine(data, xDataField, yDataField, lineID){
-		// This holds logic to create a regression line. Needs a better method, but it draws a line
-		const app = this;
-		const XaxisData = data.map(function(d) { return parseInt(d[xDataField]); });
-		const YaxisData = data.map(function(d) { return parseFloat(d[yDataField]); });
+	// plotRegressionLine(data, xDataField, yDataField, lineID){
+	// 	// This holds logic to create a regression line. Needs a better method, but it draws a line
+	// 	const app = this;
+	// 	const XaxisData = data.map(function(d) { return parseInt(d[xDataField]); });
+	// 	const YaxisData = data.map(function(d) { return parseFloat(d[yDataField]); });
 		
-		const regression = leastSquaresequation(XaxisData,YaxisData);
+	// 	const regression = leastSquaresequation(XaxisData,YaxisData);
 
-		const regressionLine = d3.line()
-	        .y(function(d) { return app.yScale(regression(d.HomePrice)) })
-	        .x(function(d) { return app.xScale(d.HomePrice) });
+	// 	const regressionLine = d3.line()
+	//         .y(function(d) { return app.yScale(regression(d.HomePrice)) })
+	//         .x(function(d) { return app.xScale(d.HomePrice) });
 
-		app.chartInner.append("path")
-			.classed('regression-line', true)
-			.classed(`regression-line--${lineID}`, true)
-	        .datum(data)
-	        .style('stroke', getTribColors('trib-grey2'))
-	        .style('stroke-width', 2)
-	        // .style('stroke-dasharray', '3,5')
-	        .style('fill', 'transparent')
-	        .attr("d", regressionLine);
-	}
+	// 	app.chartInner.append("path")
+	// 		.classed('regression-line', true)
+	// 		.classed(`regression-line--${lineID}`, true)
+	//         .datum(data)
+	//         .style('stroke', getTribColors('trib-grey2'))
+	//         .style('stroke-width', 2)
+	//         // .style('stroke-dasharray', '3,5')
+	//         .style('fill', 'transparent')
+	//         .attr("d", regressionLine);
+	// }
 }
 // This function creates a least-squares regression line
-function leastSquaresequation(XaxisData, Yaxisdata) {
-    var ReduceAddition = function(prev, cur) { return prev + cur; };
+// function leastSquaresequation(XaxisData, Yaxisdata) {
+//     var ReduceAddition = function(prev, cur) { return prev + cur; };
     
-    // finding the mean of Xaxis and Yaxis data
-    var xBar = XaxisData.reduce(ReduceAddition) * 1.0 / XaxisData.length;
-    var yBar = Yaxisdata.reduce(ReduceAddition) * 1.0 / Yaxisdata.length;
+//     // finding the mean of Xaxis and Yaxis data
+//     var xBar = XaxisData.reduce(ReduceAddition) * 1.0 / XaxisData.length;
+//     var yBar = Yaxisdata.reduce(ReduceAddition) * 1.0 / Yaxisdata.length;
 
-    var SquareXX = XaxisData.map(function(d) { return Math.pow(d - xBar, 2); })
-      .reduce(ReduceAddition);
+//     var SquareXX = XaxisData.map(function(d) { return Math.pow(d - xBar, 2); })
+//       .reduce(ReduceAddition);
     
-    var ssYY = Yaxisdata.map(function(d) { return Math.pow(d - yBar, 2); })
-      .reduce(ReduceAddition);
+//     var ssYY = Yaxisdata.map(function(d) { return Math.pow(d - yBar, 2); })
+//       .reduce(ReduceAddition);
       
-    var MeanDiffXY = XaxisData.map(function(d, i) { return (d - xBar) * (Yaxisdata[i] - yBar); })
-      .reduce(ReduceAddition);
+//     var MeanDiffXY = XaxisData.map(function(d, i) { return (d - xBar) * (Yaxisdata[i] - yBar); })
+//       .reduce(ReduceAddition);
       
-    var slope = MeanDiffXY / SquareXX;
-    var intercept = yBar - (xBar * slope);
+//     var slope = MeanDiffXY / SquareXX;
+//     var intercept = yBar - (xBar * slope);
   
-// returning regression function
-    return function(x) {
-      return (x * slope) + intercept
-    }
+// // returning regression function
+//     return function(x) {
+//       return (x * slope) + intercept
+//     }
 
-  }
+//   }
 
 module.exports = scatterplot;

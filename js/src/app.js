@@ -36,38 +36,36 @@ let dataSets =[
 
 function slideInstructions(slideNumber, brokenModel){
 	const 	bar = document.querySelector('.progress-bar__bar'),
-			dot = document.querySelector('.progress-bar__dot')
-	
+			dot = document.querySelector('.progress-bar__dot'),
+			examples = document.querySelectorAll('.labels .example');
+
 	bar.style.width = dot.style.left = `${100 / window.totalSlides * slideNumber}%`;
 	// let visibleLines;
 	switch (slideNumber) {
 		case 1:
-			console.log('1');
+			for (var example of examples){
+				example.classList.add('example--visible');
+			}
 			brokenModel.plotDots(2);
 			break;
 		case 2:
-			console.log('2');
+			for (var example of examples){
+				example.classList.remove('example--visible');
+			}
+			brokenModel.plotDots(0);
 			break;
 		case 3:
 			console.log('3');
-			brokenModel.plotDots(2);
+			
 			break;
 		case 4:
 			console.log('4');
-			brokenModel.plotDots(0);
+			brokenModel.plotDots(1);
 			break;
 		case 5:
 			console.log('5');
-			brokenModel.plotDots(0);
+			// brokenModel.plotDots(0);
 			break;
-		case 6:
-			console.log('6');
-			brokenModel.plotDots(1);
-			break;
-		case 7:
-			console.log('7');
-			break;
-
 	}
 }
 
@@ -91,7 +89,7 @@ window.addEventListener('load', function(e){
 
 		const brokenModel = new scatterplot({
 			container:document.getElementById('broken-model'),
-			innerMargins:{ top: 10, right:10, bottom:40, left:50 },
+			innerMargins:{ top: 10, right:10, bottom:40, left:40 },
 			data:dataSets, // an array of objects with the datasets inside it
 			initialIndex: 2, // Index of the data
 			meta:{
