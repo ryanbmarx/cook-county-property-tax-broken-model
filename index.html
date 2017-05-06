@@ -14,7 +14,7 @@
     </script>
 </head>
 <body data-slide=1>
-<div class="graphic-wrapper" style='border:1px dashed #aaa'>
+<div class="graphic-wrapper">
 	<h1 class='chart_hed'>{{ headline }}</h1>
     <div class='chatter'>
         {{ chatter|markdown }}
@@ -41,8 +41,11 @@
         <div id='broken-model' class='broken-model__chart'></div>
         {% for text in slidetext|sort(attribute="slidenum") if text.publish == 1 %}
             <div id='text{{ text.slidenum }}' class='text {% if loop.first %}text--visible {% endif %}'>
-                <span class='text__number'>{{ text.slidenum }}</span>
-                {{ text.text|markdown }}
+{#                 <span class='text__number'>{{ text.slidenum }}</span> #}
+                <p class='text__blurb'>{{ text.text|process_text() }}</p>
+                {% if text.label %}
+                    <p class='text__label'>{{ text.label }}</p>
+                {% endif %}
             </div>
         {% endfor %}
         
