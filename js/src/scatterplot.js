@@ -33,7 +33,7 @@ class scatterplot{
 			.domain([0,2]);
 
 		const yAxis = d3.axisLeft(app.yScale)
-			.tickSizeInner(2)
+			.tickSizeInner(0)
 			.tickSizeOuter(0);
 
 		// TODO: Get the real range of all three datasets.
@@ -42,7 +42,9 @@ class scatterplot{
 			.domain([0,1000000]);
 
 		const xAxis = d3.axisBottom(app.xScale)
-			.tickFormat(d3.format('$.3s'))
+			.tickSizeInner(0)
+			.tickSizeOuter(0)
+			.tickFormat(d3.format('$.1s'))
 			.tickSizeOuter(0);
 		// ----------------------------------
 		// START MESSING WITH SVGs
@@ -54,21 +56,57 @@ class scatterplot{
             .attr("width", width)
             .attr("height", height);
 
-        svg.append('g')
-        	.attr('class', 'x axis')
-        	.attr('transform', `translate(${margin.left},${innerHeight + margin.top})`)
-        	.call(xAxis);
-
-        svg.append('g')
-        	.attr('class', 'y axis')
-        	.attr('transform', `translate(${margin.left},${margin.top})`)
-        	.call(yAxis);
-
+        // Add some horiz and vert grid lines
 		const grid = svg.append('g')
 			.classed('grid', true)
 			.attr("width",innerWidth)
 			.attr("height",innerHeight)
 			.attr(`transform`,`translate(${ margin.left }, ${ margin.top })`);
+		['x','y'].forEach((s, index) => {
+			let 	direction = s,
+					scale = app[`${s}Scale`],
+					min = scale.domain()[0],
+					max = scale.domain()[1],
+					tickNumber = scale.ticks().length,
+					stepInterval = (max - min) / (tickNumber - 1);
+			console.log(s,min,max,tickNumber,stepInterval);
+			for (var i = min; i <= max; i += stepInterval){
+				console.log(i);
+	        	grid.append('line')
+	        		.attr('class', `grid__line grid__line--${direction}`)
+	        		.attr('x1', function(){
+	        			return direction == "x" ? scale(i) : 0;
+	        		})
+	        		.attr('x2', function(){
+	        			return direction == "x" ? scale(i) : innerWidth;
+	        		})
+	        		.attr('y1', function(){
+	        			return direction == "x" ? 0 : scale(i);
+	        		})
+	        		.attr('y2', function(){
+	        			return direction == "x" ? innerHeight : scale(i);
+	        		})
+	        		.style('stroke', '#eee')
+	        		.style('stroke-width', 2)
+	        		.style('fill', 'transparent');
+			}
+
+		})
+
+        svg.append('g')
+        	.attr('class', 'x axis')
+        	.attr('transform', `translate(${margin.left},${innerHeight + margin.top + 5})`)
+        	.call(xAxis)
+	    	.selectAll('.domain')
+        	.remove();
+
+
+        svg.append('g')
+        	.attr('class', 'y axis')
+        	.attr('transform', `translate(${margin.left - 5},${margin.top})`)
+        	.call(yAxis)
+        	.selectAll('.domain')
+        	.remove();
 
 		// console.log(xAxis.ticks(10));
 
@@ -81,7 +119,7 @@ class scatterplot{
 		app.chartInner.append('line')
 			.classed('one-line', true)
 			.attr('x1', 0)
-			.attr('x2', innerWidth + margin.right)
+			.attr('x2', innerWidth)
 			.attr('y1', app.yScale(1))
 			.attr('y2', app.yScale(1))
 	        .style('stroke', getTribColors('trib-gray1'))
@@ -163,16 +201,29 @@ class scatterplot{
 						.attr('text-anchor', 'middle');
 			}
 
-		// app.data.forEach( (data, index) => {
-		// 	app.plotRegressionLine(data.data, 'HomePrice', 'Ratio', index);
-		// })
+      // Add the outer grid
+		const outerGrid = svg.append('g')
+			.classed('outer-grid', true)
+			.attr("width",innerWidth)
+			.attr("height",innerHeight)
+			.attr(`transform`,`translate(${ margin.left }, ${ margin.top })`);
+
+		outerGrid.append('rect')
+			.attr('x', 0)
+			.attr('y', 0)
+			.attr('height', innerHeight)
+			.attr('width', innerWidth)
+			.style('stroke', 'black')
+			.style('stroke-width', 1)
+			.style('fill', 'transparent');
+
 
 		app.plotDots(app.options.initialIndex)
 
 		// Add an example to be labeled
 		
-		const 	exampleRatio = 1.8,
-				exampleMarketValue = 150000,
+		const 	exampleRatio = app.yScale(1.8),
+				exampleMarketValue = app.xScale(150000),
 				exampleCircleRadius = 4,
 				exampleCircleStrokeWidth = 2,
 				exampleLineLength = 25;
@@ -183,8 +234,8 @@ class scatterplot{
 			.classed('example__circle', true)
 			.classed('example--visible', true)
 			.attr('r', exampleCircleRadius)
-			.attr('cx', app.xScale(exampleMarketValue))
-			.attr('cy', app.yScale(exampleRatio))
+			.attr('cx', exampleMarketValue)
+			.attr('cy', exampleRatio)
 			.attr('fill', getTribColors('trib-orange'))
 			.attr('stroke', 'black')
 			.attr('stroke-width', exampleCircleStrokeWidth);
@@ -194,9 +245,9 @@ class scatterplot{
 			.classed('example__line', true)
 			.classed('example--visible', true)
 			.attr('d', function(){
-				return `M${app.xScale(exampleMarketValue) + exampleCircleRadius},${app.yScale(exampleRatio)} 
-						Q${app.xScale(exampleMarketValue) + exampleCircleRadius + 19}, ${app.yScale(exampleRatio)}  
-						${app.xScale(exampleMarketValue) + exampleCircleRadius + 19}, ${app.yScale(exampleRatio) + 15}`;
+				return `M${exampleMarketValue + exampleCircleRadius},${exampleRatio} 
+						Q${exampleMarketValue + exampleCircleRadius + 19}, ${exampleRatio}  
+						${exampleMarketValue + exampleCircleRadius + 19}, ${exampleRatio + 15}`;
 			})
 			.style('stroke', 'black')
 			.style('stroke-width', 2)
@@ -207,8 +258,8 @@ class scatterplot{
 			.classed('example__text', true)
 			.classed('example--visible', true)
 			.text('One circle = one home')
-			.attr('x', app.xScale(exampleMarketValue) + 5)
-			.attr('y', app.yScale(exampleRatio) + exampleCircleRadius + 20)
+			.attr('x', exampleMarketValue + 5)
+			.attr('y', exampleRatio + exampleCircleRadius + 20)
 			.style('font-family','Arial, sans-serif')
 			.style('font-size','13px')
 			.style('font-weight','bold');

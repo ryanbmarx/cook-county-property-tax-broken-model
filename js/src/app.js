@@ -43,12 +43,14 @@ function slideInstructions(slideNumber, brokenModel){
 	// let visibleLines;
 	switch (slideNumber) {
 		case 1:
+			// Fade in examples
 			for (var example of examples){
 				example.classList.add('example--visible');
 			}
 			brokenModel.plotDots(2);
 			break;
 		case 2:
+			// Fade out examples
 			for (var example of examples){
 				example.classList.remove('example--visible');
 			}
