@@ -69,9 +69,7 @@ class scatterplot{
 					max = scale.domain()[1],
 					tickNumber = scale.ticks().length,
 					stepInterval = (max - min) / (tickNumber - 1);
-			console.log(s,min,max,tickNumber,stepInterval);
 			for (var i = min; i <= max; i += stepInterval){
-				console.log(i);
 	        	grid.append('line')
 	        		.attr('class', `grid__line grid__line--${direction}`)
 	        		.attr('x1', function(){
@@ -279,10 +277,11 @@ class scatterplot{
 			.append('circle')
 			.attr('r', 3)
 			// .style('fill', getTribColors('trib-blue2'))
-			.style('opacity', '.2')
 			.attr('cx', d => app.xScale(d.HomePrice))
 			.attr('cy', d => app.yScale(d.Ratio))
+			.style('opacity', .2)
 			.transition()
+			
 			.duration(transitionDuration)
 			.attr('fill', d => {
 				return d.Ratio > 1 ? getTribColors('trib-red2') : getTribColors('trib-orange');

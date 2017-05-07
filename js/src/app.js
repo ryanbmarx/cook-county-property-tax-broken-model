@@ -58,7 +58,7 @@ function slideInstructions(slideNumber, brokenModel){
 			break;
 		case 3:
 			console.log('3');
-			
+			brokenModel.plotDots(0);
 			break;
 		case 4:
 			console.log('4');
@@ -66,7 +66,7 @@ function slideInstructions(slideNumber, brokenModel){
 			break;
 		case 5:
 			console.log('5');
-			// brokenModel.plotDots(0);
+			brokenModel.plotDots(1);
 			break;
 	}
 }
