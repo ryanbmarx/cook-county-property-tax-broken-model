@@ -41,7 +41,6 @@
         <div id='broken-model' class='broken-model__chart'></div>
         {% for text in slidetext|sort(attribute="slidenum") if text.publish == 1 %}
             <div id='text{{ text.slidenum }}' class='text {% if loop.first %}text--visible {% endif %}'>
-{#                 <span class='text__number'>{{ text.slidenum }}</span> #}
                 <p class='text__blurb'>{{ text.text|process_text() }}</p>
                 {% if text.label %}
                     <p class='text__label'>{{ text.label }}</p>
@@ -50,7 +49,7 @@
         {% endfor %}
         
 	</div>
-	<a>TODO: Add methods link</a>
+	{# <a>TODO: Add methods link</a> #}
 </div>
 	<script src="//{{ ROOT_URL }}/js/app.min.js"></script>
 </body>
