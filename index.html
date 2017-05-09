@@ -13,7 +13,7 @@
         window.totalSlides = {{ slidetext|get_length }};
     </script>
 </head>
-<body data-slide=1>
+<body data-slide=1 data-playing=false>
 <div class="graphic-wrapper">
 	<h1 class='chart_hed'>{{ headline }}</h1>
     <div class='chatter'>
@@ -22,20 +22,25 @@
     <div class='data-buttons'>
     	<button class='data-button' data-direction='back'>
             <i class="fa fa-chevron-left" aria-hidden="true"></i>
+            Back
+        </button>
+        <button class='data-button' data-direction='restart'>
+            <i class="fa fa-refresh" aria-hidden="true"></i>
+            Reset
         </button>
         <button class='data-button' data-direction='forward'>
+            Next
             <i class="fa fa-chevron-right" aria-hidden="true"></i>
         </button>
         <button class='data-button' data-direction='play'>
             <i class="fa fa-play-circle" aria-hidden="true"></i>
-        </button>
-        <button class='data-button' data-direction='restart'>
-            <i class="fa fa-refresh" aria-hidden="true"></i>
+            Play
         </button>
     </div>
     <div class='progress-bar'>
         <div class='progress-bar__bar'></div>
-        <div class='progress-bar__dot'></div>
+        <div class='progress-bar__dot progress-bar__dot--static'></div>
+        <div class='progress-bar__dot progress-bar__dot--pulse'></div>
     </div>
     <div class='broken-model'>
         <div id='broken-model' class='broken-model__chart'></div>

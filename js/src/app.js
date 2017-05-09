@@ -36,11 +36,12 @@ let dataSets =[
 
 function slideInstructions(slideNumber, brokenModel){
 	const 	bar = document.querySelector('.progress-bar__bar'),
-			dot = document.querySelector('.progress-bar__dot'),
+			dot = document.querySelector('.progress-bar__dot--static'),
+			pulseDot = document.querySelector('.progress-bar__dot--pulse'),
 			examples = document.querySelectorAll('.labels .example');
 
-	bar.style.width = dot.style.left = `${100 / window.totalSlides * slideNumber}%`;
-	// let visibleLines;
+	bar.style.width = dot.style.left = pulseDot.style.left = `${100 / window.totalSlides * slideNumber}%`;
+	
 	switch (slideNumber) {
 		case 1:
 			// Fade in examples
@@ -126,14 +127,16 @@ window.addEventListener('load', function(e){
 				} else if ( direction == 'forward'){
 					currentSlide = currentSlide + 1 > window.totalSlides ? window.totalSlides : currentSlide + 1;
 				} else if (direction == "play") {
+					document.querySelector('body').dataset.playing = true;
 					const player = setInterval(function(){
 						if (document.querySelector('body').dataset.slide < window.totalSlides){
 							document.querySelector(".data-button[data-direction='forward']").click();
 						} else {
+							document.querySelector('body').dataset.playing = false;
 							clearInterval(player);
 							console.log('cleared');
 						}
-					}, 3500)
+					}, 4500)
 				} else {
 					// Reset back to scene 1
 					currentSlide = 1;

@@ -93,6 +93,7 @@ $progress-bar-dot-height:8px;
 		color:black;
 		transition: background 400ms ease;
 		font-size: 16px;
+		padding:5px 0;
 		&:hover{
 			background: $trib-blue2;
 			color:white;
@@ -122,7 +123,10 @@ $progress-bar-dot-height:8px;
 		margin: #{($progress-bar-dot-height - $progress-bar-height) / -2} 0 0 #{$progress-bar-dot-height / -2}
 	}
 
-
+	&__dot--pulse{
+		// This dot only is used for the playing animation;
+		display:none;
+	}
 
 	&__bar{
 		position:absolute;
@@ -133,6 +137,21 @@ $progress-bar-dot-height:8px;
 		transition:width 400ms ease;
 	}
 
+}
+
+body[data-playing=true], body[data-playing="true"]{
+	// These styles only happen after the play button has been tapped/clicked
+	.progress-bar__dot--pulse{
+		display:block;
+		animation: pulse 1s ease-out;
+    	animation-iteration-count: infinite; 
+	}
+
+	button[data-direction='play']{
+		background: $trib-blue2;
+		color:white;
+		transition: background 400ms ease; 
+	}
 }
 
 .regression-line{
