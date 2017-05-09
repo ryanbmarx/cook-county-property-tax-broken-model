@@ -136,17 +136,17 @@ $progress-bar-dot-height:8px;
 	opacity:0;
 	transition: opacity 400ms ease; 
 	
-	&--visible{
-		opacity:1;
-		transition: opacity 400ms ease; 		
-	}
+	// &--visible{
+	// 	opacity:1;
+	// 	transition: opacity 400ms ease; 		
+	// }
 
 }
 
 // picking and choosing when some lines are shown
-body[data-slide='5'] .regression-line--0 { opacity:1; }
+// body[data-slide='5'] .regression-line--0 { opacity:1; }
 // body[data-slide='6'] .regression-line--0 { opacity:1; }
-body[data-slide='7'] .regression-line--1 { opacity:1; }
+// body[data-slide='7'] .regression-line--1 { opacity:1; }
 
 @media all and (max-width: $tablet-max-width){
 	.text{
