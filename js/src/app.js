@@ -125,7 +125,7 @@ window.addEventListener('load', function(e){
 				if (direction == 'back'){
 					currentSlide = currentSlide - 1 > 0 ? currentSlide - 1 : 1;
 				} else if ( direction == 'forward'){
-					currentSlide = currentSlide + 1 > window.totalSlides ? window.totalSlides : currentSlide + 1;
+					currentSlide = currentSlide + 1 > window.totalSlides ? 1 : currentSlide + 1;
 				} else if (direction == "play") {
 					document.querySelector('body').dataset.playing = true;
 					const player = setInterval(function(){
