@@ -47,6 +47,7 @@ function slideInstructions(slideNumber, brokenModel){
 			for (var example of examples){
 				example.classList.add('example--visible');
 			}
+			highlightRegressionLine('none')
 			brokenModel.plotDots(2);
 			break;
 		case 2:
@@ -54,23 +55,34 @@ function slideInstructions(slideNumber, brokenModel){
 			for (var example of examples){
 				example.classList.remove('example--visible');
 			}
+			highlightRegressionLine('none')
 			brokenModel.plotDots(0);
 			break;
 		case 3:
-			console.log('3');
 			brokenModel.plotDots(0);
+			highlightRegressionLine('2006')
 			break;
 		case 4:
-			console.log('4');
+			highlightRegressionLine('none')
 			brokenModel.plotDots(1);
 			break;
 		case 5:
-			console.log('5');
+			highlightRegressionLine('2009')
 			brokenModel.plotDots(1);
 			break;
 	}
 }
-
+function highlightRegressionLine(id){
+	
+	const lines = document.querySelectorAll('.regression-line');
+	for (var line of lines){
+		if (line.classList.contains(`regression-line--${id}`)){
+			line.style.opacity = 1;
+		} else {
+			line.style.opacity = 0;
+		}
+	}
+}
 
 window.addEventListener('load', function(e){
 

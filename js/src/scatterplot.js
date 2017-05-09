@@ -125,6 +125,10 @@ class scatterplot{
 	        .style('fill', 'transparent');
 
 
+        svg.append('g')
+        	.attr('class', 'regression-lines')
+        	.attr('transform', `translate(${margin.left},${margin.top})`);
+
 			// THE LABELING
 
 			const labels = svg.append('g')
@@ -216,6 +220,13 @@ class scatterplot{
 			.style('fill', 'transparent');
 
 
+		// Add the two regression lines
+
+		app.plotRegressionLine(app.data[0].data, 'HomePrice', 'Ratio', '2006')
+		app.plotRegressionLine(app.data[1].data, 'HomePrice', 'Ratio', '2009')
+		app.plotRegressionLine(app.data[2].data, 'HomePrice', 'Ratio', 'ideal')
+
+
 		app.plotDots(app.options.initialIndex)
 
 		// Add an example to be labeled
@@ -304,54 +315,55 @@ class scatterplot{
 	}
 
 
-	// plotRegressionLine(data, xDataField, yDataField, lineID){
-	// 	// This holds logic to create a regression line. Needs a better method, but it draws a line
-	// 	const app = this;
-	// 	const XaxisData = data.map(function(d) { return parseInt(d[xDataField]); });
-	// 	const YaxisData = data.map(function(d) { return parseFloat(d[yDataField]); });
+	plotRegressionLine(data, xDataField, yDataField, lineID){
+		// This holds logic to create a regression line. Needs a better method, but it draws a line
+		const app = this;
+		const XaxisData = data.map(function(d) { return parseInt(d[xDataField]); });
+		const YaxisData = data.map(function(d) { return parseFloat(d[yDataField]); });
 		
-	// 	const regression = leastSquaresequation(XaxisData,YaxisData);
+		const regression = leastSquaresequation(XaxisData,YaxisData);
 
-	// 	const regressionLine = d3.line()
-	//         .y(function(d) { return app.yScale(regression(d.HomePrice)) })
-	//         .x(function(d) { return app.xScale(d.HomePrice) });
+		const regressionLine = d3.line()
+	        .y(function(d) { return app.yScale(regression(d.HomePrice)) })
+	        .x(function(d) { return app.xScale(d.HomePrice) });
 
-	// 	app.chartInner.append("path")
-	// 		.classed('regression-line', true)
-	// 		.classed(`regression-line--${lineID}`, true)
-	//         .datum(data)
-	//         .style('stroke', getTribColors('trib-grey2'))
-	//         .style('stroke-width', 2)
-	//         // .style('stroke-dasharray', '3,5')
-	//         .style('fill', 'transparent')
-	//         .attr("d", regressionLine);
-	// }
+		d3.select('.regression-lines').append("path")
+			.classed('regression-line', true)
+			.classed(`regression-line--${lineID}`, true)
+	        .datum(data)
+	        .style('stroke', getTribColors('trib-grey2'))
+	        .style('stroke-width', 2)
+	        // .style('stroke-dasharray', '3,5')
+	        .style('fill', 'transparent')
+	        .attr("d", regressionLine);
+	}
 }
 // This function creates a least-squares regression line
-// function leastSquaresequation(XaxisData, Yaxisdata) {
-//     var ReduceAddition = function(prev, cur) { return prev + cur; };
+function leastSquaresequation(XaxisData, Yaxisdata) {
+	
+	var ReduceAddition = function(prev, cur) { return prev + cur; };
     
-//     // finding the mean of Xaxis and Yaxis data
-//     var xBar = XaxisData.reduce(ReduceAddition) * 1.0 / XaxisData.length;
-//     var yBar = Yaxisdata.reduce(ReduceAddition) * 1.0 / Yaxisdata.length;
+    // finding the mean of Xaxis and Yaxis data
+    var xBar = XaxisData.reduce(ReduceAddition) * 1.0 / XaxisData.length;
+    var yBar = Yaxisdata.reduce(ReduceAddition) * 1.0 / Yaxisdata.length;
 
-//     var SquareXX = XaxisData.map(function(d) { return Math.pow(d - xBar, 2); })
-//       .reduce(ReduceAddition);
+    var SquareXX = XaxisData.map(function(d) { return Math.pow(d - xBar, 2); })
+      .reduce(ReduceAddition);
     
-//     var ssYY = Yaxisdata.map(function(d) { return Math.pow(d - yBar, 2); })
-//       .reduce(ReduceAddition);
+    var ssYY = Yaxisdata.map(function(d) { return Math.pow(d - yBar, 2); })
+      .reduce(ReduceAddition);
       
-//     var MeanDiffXY = XaxisData.map(function(d, i) { return (d - xBar) * (Yaxisdata[i] - yBar); })
-//       .reduce(ReduceAddition);
+    var MeanDiffXY = XaxisData.map(function(d, i) { return (d - xBar) * (Yaxisdata[i] - yBar); })
+      .reduce(ReduceAddition);
       
-//     var slope = MeanDiffXY / SquareXX;
-//     var intercept = yBar - (xBar * slope);
+    var slope = MeanDiffXY / SquareXX;
+    var intercept = yBar - (xBar * slope);
   
-// // returning regression function
-//     return function(x) {
-//       return (x * slope) + intercept
-//     }
+	// returning regression function
+    return function(x) {
+      return (x * slope) + intercept
+    }
 
-//   }
+}
 
 module.exports = scatterplot;
