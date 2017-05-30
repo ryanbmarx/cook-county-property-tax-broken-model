@@ -2,6 +2,8 @@ import scatterplot from './scatterplot.js';
 import * as pym from 'pym.js';
 import * as q from 'd3-queue';
 import {csv} from 'd3';
+import clickTrack from './click-track.js';
+
 
 NodeList.prototype[Symbol.iterator] = Array.prototype[Symbol.iterator];
 HTMLCollection.prototype[Symbol.iterator] = Array.prototype[Symbol.iterator];
@@ -113,7 +115,7 @@ window.addEventListener('load', function(e){
 			}
 		});
         
-		slideInstructions(1, brokenModel);
+		// slideInstructions(1, brokenModel);
 
 		const dataButtons = document.querySelectorAll('.data-button');
 		for (var button of dataButtons){
@@ -123,10 +125,13 @@ window.addEventListener('load', function(e){
 				let		currentSlide = parseInt(bodyElement.dataset.slide);
 								
 				if (direction == 'back'){
+					clickTrack('SCATTER: User clicked back');
 					currentSlide = currentSlide - 1 > 0 ? currentSlide - 1 : 1;
 				} else if ( direction == 'forward'){
+					clickTrack('SCATTER: User clicked fwd');
 					currentSlide = currentSlide + 1 > window.totalSlides ? 1 : currentSlide + 1;
 				} else if (direction == "play") {
+					clickTrack('SCATTER: User clicked play');
 					document.querySelector('body').dataset.playing = true;
 					const player = setInterval(function(){
 						if (document.querySelector('body').dataset.slide < window.totalSlides){

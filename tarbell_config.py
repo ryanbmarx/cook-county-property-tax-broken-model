@@ -51,5 +51,13 @@ S3_BUCKETS = {
 # Default template variables
 DEFAULT_CONTEXT = {
     'name': 'property-tax-assessments-broken-model-scatterplots',
-    'title': 'Property tax assessments - How the model broke'
+    'title': 'Property tax assessments - How the model broke',
+    'OMNITURE': { 
+		'domain': 'chicagotribune.com',
+	    'section': 'news',
+	    'sitename': 'Chicago Tribune',
+	    'subsection': 'watchdog',
+	    'subsubsection': '',
+	    'type': 'dataproject'
+	   }
 }
