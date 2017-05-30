@@ -56,6 +56,28 @@
 	</div>
 	<p class='chart_source'>{{scatter_source}}</p>
 </div>
+ <script type="text/javascript" src="http://www.chicagotribune.com/hive/javascripts/metrics/s_code_trb.js"></script>
+  {% omnitag request, OMNITURE, None, title, 'dataproject' %}
+
+<script type="text/javascript">
+    ((((window.trb || (window.trb = {})).data || (trb.data = {})).metrics || (trb.data.metrics = {})).thirdparty = {
+            pageName: 'ct:apps:news:cook-county-property-taxes:articleproject.',
+            channel: 'news',
+            server: 'apps.chicagotribune.com',
+            hier1: 'chicagotribune:news',
+            hier2: 'news',
+            prop1: 'D=pageName',
+            prop2: 'news',
+            prop38: 'articleproject',
+            prop57: 'D=c38',
+            prop59: '',
+            eVar20: 'chicagotribune',
+            eVar21: 'D=c38',
+            eVar34: 'D=ch',
+            eVar35: 'D=pageName',
+            events:''
+    });  
+</script>
 	<script src="//{{ ROOT_URL }}/js/app.min.js"></script>
 </body>
 </html>
