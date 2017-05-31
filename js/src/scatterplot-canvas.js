@@ -1,7 +1,7 @@
 import * as d3 from 'd3';
 import getTribColors from './getTribColors.js';
 
-class scatterplot{
+class scatterplotCanvas{
 
 	constructor(options){
 		const app = this;
@@ -11,7 +11,7 @@ class scatterplot{
 
 		app.initChart(app.dataToChart);
 		// app.doesTheChartNeedAnExampleLabeled = true;
-
+		console.log(getTribColors('trib-blue2', .5));
 	}
 
 	initChart(){
@@ -20,10 +20,13 @@ class scatterplot{
 				bbox = container.node().getBoundingClientRect(), 
 				height=bbox.height,
 				width=bbox.width,
-				margin= app.options.innerMargins,
+				margin = app.options.innerMargins,
 				innerHeight = height - margin.top - margin.bottom,
 				innerWidth = width - margin.right - margin.left;
 
+				app.innerHeight = innerHeight;
+				app.innerWidth = innerWidth;
+				
 		// ----------------------------------
 		// custom scales
 		// ----------------------------------
@@ -222,29 +225,30 @@ class scatterplot{
 
 		// Add the two regression lines
 
-		app.plotRegressionLine(app.data[0].data, 'HomePrice', 'Ratio', '2006')
-		app.plotRegressionLine(app.data[1].data, 'HomePrice', 'Ratio', '2009')
-		app.plotRegressionLine(app.data[2].data, 'HomePrice', 'Ratio', 'ideal')
+		// app.plotRegressionLine(app.data[0].data, 'HomePrice', 'Ratio', '2006')
+		// app.plotRegressionLine(app.data[1].data, 'HomePrice', 'Ratio', '2009')
+		// app.plotRegressionLine(app.data[2].data, 'HomePrice', 'Ratio', 'ideal')
 
 
-		app.plotDots(app.options.initialIndex)
+		
 
 		// Add an example to be labeled
 		
 		const 	exampleRatio = app.yScale(1.8),
 				exampleMarketValue = app.xScale(150000),
-				exampleCircleRadius = 4,
+				exampleCircleRadius = 8,
 				exampleCircleStrokeWidth = 2,
 				exampleLineLength = 25;
 
 		// First the example circle
-		labels.append('circle')
+		labels.append('rect')
 			.classed('example', true)
 			.classed('example__circle', true)
 			.classed('example--visible', true)
-			.attr('r', exampleCircleRadius)
-			.attr('cx', exampleMarketValue)
-			.attr('cy', exampleRatio)
+			.attr('height', exampleCircleRadius)
+			.attr('width', exampleCircleRadius)
+			.attr('x', exampleMarketValue)
+			.attr('y', exampleRatio - (exampleCircleRadius / 2))
 			.attr('fill', getTribColors('trib-orange'))
 			.attr('stroke', 'black')
 			.attr('stroke-width', exampleCircleStrokeWidth);
@@ -266,53 +270,149 @@ class scatterplot{
 			.classed('example', true)
 			.classed('example__text', true)
 			.classed('example--visible', true)
-			.text('One circle = one home')
+			.text('One square = one home')
 			.attr('x', exampleMarketValue + 5)
 			.attr('y', exampleRatio + exampleCircleRadius + 20)
 			.style('font-family','Arial, sans-serif')
 			.style('font-size','13px')
 			.style('font-weight','bold');
 
+		const canvas = d3.select(app.options.container)
+			.append('canvas')
+			.attr('height', innerHeight)
+			.attr('width', innerWidth)
+			.style('position', 'absolute')
+			.style('top', `${margin.top}px`)
+			.style('background', 'rgba(255, 255, 0, .2)')
+			.style('left', `${margin.left}px`);
+		
+		app.ctx = canvas.node().getContext('2d');
+
+		// app.plotDots(app.options.initialIndex
+		console.log('ready to plot sqrs', canvas.node(), typeof(canvas));
+
+		app.plotDotsCanvas(app.options.initialIndex);
+
+
 	}
 
-	plotDots(index){
-		const app = this;
-		const transitionDuration = 1000;
-		const data = app.data[index].data;
+	plotDotsCanvas(index){
+		// Following this: https://medium.freecodecamp.com/d3-and-canvas-in-3-steps-8505c8b27444
+	
+		// This is your SVG replacement and the parent of all other elements
+		const 	app = this,
+				customBase = document.createElement('custom'),
+				custom = d3.select(customBase),
+				rectWidth = 8, 
+				rectHeight = rectWidth,
+				ctx = app.ctx,
+				transitionDuration = 400,
+				colorScale = function(ratio){
+					return ratio > 1 ? getTribColors('trib-red2') : getTribColors('trib-orange');
+				}; 
+		function dataBind(data)	{	
+			console.log('binding the data');
+			// This is the data binding, which requires both a sleection and some data.
+			// The result gives access to the enter(), update() and exit() sets.
+			const join = custom.selectAll('custom.rect')
+				.data(data);
 
-		const dots = app.chartInner
-			.selectAll('circle')
-			.data(data)
+			// not sure why I need to assign this to a var, but I will since I want to 
+			// follow the tutorial closely
+			const enterSet = join.enter()
+				.append('custom')
+				.attr('class', 'rect')
+				.attr('x', d => app.xScale(d.HomePrice))
+				.attr('y', d => app.yScale(d.Ratio))
+				.attr('fillStyle', d => colorScale(d.Ratio))
+				.transition()
+				.duration(transitionDuration)
+				.attr('width', rectWidth)
+				.attr('height', rectHeight);
 
-		dots.enter()
-			.append('circle')
-			.attr('r', 3)
-			// .style('fill', getTribColors('trib-blue2'))
-			.attr('cx', d => app.xScale(d.HomePrice))
-			.attr('cy', d => app.yScale(d.Ratio))
-			.style('opacity', .2)
-			.transition()
+				
+
+			join
+				.attr('width', rectWidth)
+				.attr('height', rectHeight)
+				.transition()
+				.duration(transitionDuration)
+				.attr('x', d => app.xScale(d.HomePrice) - (rectWidth / 2))
+				.attr('y', d => app.yScale(d.Ratio) - (rectHeight / 2))
+				.attr('fillStyle', d => colorScale(d.Ratio));
 			
-			.duration(transitionDuration)
-			.attr('fill', d => {
-				return d.Ratio > 1 ? getTribColors('trib-red2') : getTribColors('trib-orange');
+			const exitSet = join.exit()
+				  .transition()
+				  .duration(transitionDuration)
+				  .attr('width', 0)
+				  .attr('height', 0)
+				  .remove();
+		}
+
+		function drawData(){
+			console.log('drawing the sqrs');
+			// Start by clearing our "paint"
+			ctx.clearRect(0, 0, app.innerWidth, app.innerHeight); // Clear the canvas.
+
+			// loop through each of the elements I stashed in memory and
+			// draw them to the canvas using the bound data-attributes
+			const elements = custom.selectAll('custom.rect');
+			// console.log(elements);
+			elements.each(function(el, i) {	
+				// console.log(el, i, this);
+				const node = d3.select(this);
+				ctx.globalAlpha = 0.2;
+				ctx.fillStyle = node.attr('fillStyle');
+				ctx.fillRect(node.attr('x'), node.attr('y'), node.attr('width'), node.attr('height'))
 			});
+		}
+		dataBind(app.data[index].data);
+		const t = d3.timer( function(elapsed){
+			console.log(elapsed)
+			drawData();
+			if (elapsed > transitionDuration) t.stop();	
+		})
 		
-		dots
-			.transition()
-			.duration(transitionDuration)
-			.attr('cx', d => app.xScale(d.HomePrice))
-			.attr('cy', d => app.yScale(d.Ratio))
-			.attr('fill', d => {
-				return d.Ratio > 1 ? getTribColors('trib-red2') : getTribColors('trib-orange');
-			})
-		
-		dots.exit()
-			.transition()
-			.duration(transitionDuration)
-			.style('opacity', 0)
-			.remove();
 	}
+
+	// plotDots(index){
+	// 	const app = this;
+	// 	const transitionDuration = 1000;
+	// 	const data = app.data[index].data;
+
+	// 	const dots = app.chartInner
+	// 		.selectAll('circle')
+	// 		.data(data)
+
+	// 	dots.enter()
+	// 		.append('circle')
+	// 		.attr('r', 3)
+	// 		// .style('fill', getTribColors('trib-blue2'))
+	// 		.attr('cx', d => app.xScale(d.HomePrice))
+	// 		.attr('cy', d => app.yScale(d.Ratio))
+	// 		.style('opacity', .2)
+	// 		.transition()
+			
+	// 		.duration(transitionDuration)
+	// 		.attr('fill', d => {
+	// 			return d.Ratio > 1 ? getTribColors('trib-red2') : getTribColors('trib-orange');
+	// 		});
+		
+	// 	dots
+	// 		.transition()
+	// 		.duration(transitionDuration)
+	// 		.attr('cx', d => app.xScale(d.HomePrice))
+	// 		.attr('cy', d => app.yScale(d.Ratio))
+	// 		.attr('fill', d => {
+	// 			return d.Ratio > 1 ? getTribColors('trib-red2') : getTribColors('trib-orange');
+	// 		})
+		
+	// 	dots.exit()
+	// 		.transition()
+	// 		.duration(transitionDuration)
+	// 		.style('opacity', 0)
+	// 		.remove();
+	// }
 
 
 	plotRegressionLine(data, xDataField, yDataField, lineID){
@@ -366,4 +466,4 @@ function leastSquaresequation(XaxisData, Yaxisdata) {
 
 }
 
-module.exports = scatterplot;
+module.exports = scatterplotCanvas;

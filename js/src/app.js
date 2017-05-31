@@ -1,4 +1,4 @@
-import scatterplot from './scatterplot.js';
+import scatterplotCanvas from './scatterplot-canvas.js';
 import * as pym from 'pym.js';
 import * as q from 'd3-queue';
 import {csv} from 'd3';
@@ -51,7 +51,7 @@ function slideInstructions(slideNumber, brokenModel){
 				example.classList.add('example--visible');
 			}
 			highlightRegressionLine('none')
-			brokenModel.plotDots(2);
+			brokenModel.plotDotsCanvas(2);
 			break;
 		case 2:
 			// Fade out examples
@@ -59,19 +59,19 @@ function slideInstructions(slideNumber, brokenModel){
 				example.classList.remove('example--visible');
 			}
 			highlightRegressionLine('none')
-			brokenModel.plotDots(0);
+			brokenModel.plotDotsCanvas(0);
 			break;
 		case 3:
-			brokenModel.plotDots(0);
+			brokenModel.plotDotsCanvas(0);
 			highlightRegressionLine('2006')
 			break;
 		case 4:
 			highlightRegressionLine('none')
-			brokenModel.plotDots(1);
+			brokenModel.plotDotsCanvas(1);
 			break;
 		case 5:
 			highlightRegressionLine('2009')
-			brokenModel.plotDots(1);
+			brokenModel.plotDotsCanvas(1);
 			break;
 	}
 }
@@ -104,7 +104,7 @@ window.addEventListener('load', function(e){
 			dataSets[i].data = d;
 		});
 
-		const brokenModel = new scatterplot({
+		const brokenModel = new scatterplotCanvas({
 			container:document.getElementById('broken-model'),
 			innerMargins:{ top: 10, right:10, bottom:40, left:40 },
 			data:dataSets, // an array of objects with the datasets inside it

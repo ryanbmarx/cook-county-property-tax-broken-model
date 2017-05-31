@@ -49,13 +49,43 @@ const colors = {
 	packers_gold:" #FFB612"
 }
 
-function getTribColor(colorName){
+
+function hexToRGB(hex, alpha) {
+	let hex6;
+	if (hex.length == 4){
+		hex6 = hex.slice(1, 2) + hex.slice(1, 2) + hex.slice(2, 3) + hex.slice(2,3) + hex.slice(3,4) + hex.slice(3,4); 	
+	} else {
+		hex6 = hex;
+	}
+
+    var r = parseInt(hex6.slice(1, 3), 16),
+        g = parseInt(hex6.slice(3, 5), 16),
+        b = parseInt(hex6.slice(5, 7), 16);
+
+    if (alpha) {
+        return "rgba(" + r + ", " + g + ", " + b + ", " + alpha + ")";
+    } else {
+        return "rgb(" + r + ", " + g + ", " + b + ")";
+    }
+}
+
+function getTribColor(colorName, rgba=false){
+	// If an opacity is supplied, then the hex color is converted to rgba values.
+	// Without a supplied opacity, the variable defaults to false and a simple hex is returned.
+	
+	// We'll support both dashes and underscores by converting all to underscores
 	colorName = colorName.replace(/-/g,'_')
 
 	if (colors[colorName]){
-		return colors[colorName];
+		return rgba ? hexToRGB(colors[colorName], rgba) : colors[colorName];
 	}
+	// If the color key is not found at all.
 	return false;
 }
+
+
+// Example usage:
+// getTribColor('trib-blue2') => "#004E87"
+// getTribColor('trib-blue2', .5) => "rgba(0, 78, 135, 0.5)"
 
 module.exports = getTribColor;
