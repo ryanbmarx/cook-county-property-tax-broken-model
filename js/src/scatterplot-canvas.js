@@ -11,7 +11,6 @@ class scatterplotCanvas{
 
 		app.initChart(app.dataToChart);
 		// app.doesTheChartNeedAnExampleLabeled = true;
-		console.log(getTribColors('trib-blue2', .5));
 	}
 
 	initChart(){
@@ -289,7 +288,7 @@ class scatterplotCanvas{
 		app.ctx = canvas.node().getContext('2d');
 
 		// app.plotDots(app.options.initialIndex
-		console.log('ready to plot sqrs', canvas.node(), typeof(canvas));
+		// console.log('ready to plot sqrs', canvas.node(), typeof(canvas));
 
 		app.plotDotsCanvas(app.options.initialIndex);
 
@@ -311,7 +310,7 @@ class scatterplotCanvas{
 					return ratio > 1 ? getTribColors('trib-red2') : getTribColors('trib-orange');
 				}; 
 		function dataBind(data)	{	
-			console.log('binding the data');
+			// console.log('binding the data');
 			// This is the data binding, which requires both a sleection and some data.
 			// The result gives access to the enter(), update() and exit() sets.
 			const join = custom.selectAll('custom.rect')
@@ -350,7 +349,7 @@ class scatterplotCanvas{
 		}
 
 		function drawData(){
-			console.log('drawing the sqrs');
+			// console.log('drawing the sqrs');
 			// Start by clearing our "paint"
 			ctx.clearRect(0, 0, app.innerWidth, app.innerHeight); // Clear the canvas.
 
@@ -368,7 +367,7 @@ class scatterplotCanvas{
 		}
 		dataBind(app.data[index].data);
 		const t = d3.timer( function(elapsed){
-			console.log(elapsed)
+			// console.log(elapsed)
 			drawData();
 			if (elapsed > transitionDuration) t.stop();	
 		})
