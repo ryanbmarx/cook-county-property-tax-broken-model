@@ -1,7 +1,7 @@
 $chart-height:300px;
 $number-height: 15px;
 $chart-background:rgba(white,.95);
-$progress-bar-height:25px;
+$progress-bar-height:40px;
 $progress-bar-dot-height:8px;
 
 
@@ -114,30 +114,11 @@ $progress-bar-dot-height:8px;
     width: calc(100% - 360px);
 	height:$progress-bar-height;
 	position:relative;
-	// background:#eaeaea;
-	margin: 15px 0;
 
 	// Vertically centers text in bar
 	display: flex;
     align-items: center;
     justify-content: flex-start;
-
-	// &__dot{
-	// 	position:absolute;
-	// 	top:0;
-	// 	left:0;
-	// 	height:$progress-bar-dot-height;
-	// 	width: $progress-bar-dot-height;
-	// 	border-radius:50%;
-	// 	background:$trib-blue2;
-	// 	transition:left 400ms ease;
-	// 	margin: #{($progress-bar-dot-height - $progress-bar-height) / -2} 0 0 #{$progress-bar-dot-height / -2}
-	// }
-
-	// &__dot--pulse{
-	// 	// This dot only is used for the playing animation;
-	// 	display:none;
-	// }
 
 	&__bar{
 		position:absolute;
@@ -155,7 +136,7 @@ $progress-bar-dot-height:8px;
 	&__text{
 		@include sans-serif();
 		margin:0;
-		padding:0;
+		padding:0 0 0 37px;
 		font-style:italic;
 	}
 

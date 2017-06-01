@@ -56,7 +56,10 @@ class scatterplotCanvas{
 		const svg = container
             .append("svg")
             .attr("width", width)
-            .attr("height", height);
+            .attr("height", height)
+            .style('position', 'absolute')
+            .style('top', 0)
+            .style('left', 0);
 
         // Add some horiz and vert grid lines
 		const grid = svg.append('g')
@@ -64,34 +67,35 @@ class scatterplotCanvas{
 			.attr("width",innerWidth)
 			.attr("height",innerHeight)
 			.attr(`transform`,`translate(${ margin.left }, ${ margin.top })`);
-		['x','y'].forEach((s, index) => {
-			let 	direction = s,
-					scale = app[`${s}Scale`],
-					min = scale.domain()[0],
-					max = scale.domain()[1],
-					tickNumber = scale.ticks().length,
-					stepInterval = (max - min) / (tickNumber - 1);
-			for (var i = min; i <= max; i += stepInterval){
-	        	grid.append('line')
-	        		.attr('class', `grid__line grid__line--${direction}`)
-	        		.attr('x1', function(){
-	        			return direction == "x" ? scale(i) : 0;
-	        		})
-	        		.attr('x2', function(){
-	        			return direction == "x" ? scale(i) : innerWidth;
-	        		})
-	        		.attr('y1', function(){
-	        			return direction == "x" ? 0 : scale(i);
-	        		})
-	        		.attr('y2', function(){
-	        			return direction == "x" ? innerHeight : scale(i);
-	        		})
-	        		.style('stroke', '#eee')
-	        		.style('stroke-width', 2)
-	        		.style('fill', 'transparent');
-			}
+		// ['x','y'].forEach((s, index) => {
+		// 	let 	direction = s,
+		// 			scale = app[`${s}Scale`],
+		// 			min = scale.domain()[0],
+		// 			max = scale.domain()[1],
+		// 			tickNumber = scale.ticks().length,
+		// 			stepInterval = (max - min) / (tickNumber - 1);
+		// 	for (var i = min; i <= max; i += stepInterval){
+	 //        	grid.append('line')
+	 //        		.attr('class', `grid__line grid__line--${direction}`)
+	 //        		.attr('x1', function(){
+	 //        			return direction == "x" ? scale(i) : 0;
+	 //        		})
+	 //        		.attr('x2', function(){
+	 //        			return direction == "x" ? scale(i) : innerWidth;
+	 //        		})
+	 //        		.attr('y1', function(){
+	 //        			return direction == "x" ? 0 : scale(i);
+	 //        		})
+	 //        		.attr('y2', function(){
+	 //        			return direction == "x" ? innerHeight : scale(i);
+	 //        		})
+	 //        		.style('stroke', '#000')
+	 //        		.style('stroke-width', 1)
+	 //        		.style('stroke-dasharray', 1)
+	 //        		.style('fill', 'transparent');
+		// 	}
 
-		})
+		// })
 
         svg.append('g')
         	.attr('class', 'x axis')
@@ -277,12 +281,12 @@ class scatterplotCanvas{
 			.style('font-weight','bold');
 
 		const canvas = d3.select(app.options.container)
-			.append('canvas')
+			.insert('canvas', 'svg')
 			.attr('height', innerHeight)
 			.attr('width', innerWidth)
 			.style('position', 'absolute')
 			.style('top', `${margin.top}px`)
-			.style('background', 'rgba(255, 255, 0, .2)')
+			.style('background', 'rgba(255, 255, 0, .1)')
 			.style('left', `${margin.left}px`);
 		
 		app.ctx = canvas.node().getContext('2d');
@@ -302,7 +306,7 @@ class scatterplotCanvas{
 		const 	app = this,
 				customBase = document.createElement('custom'),
 				custom = d3.select(customBase),
-				rectWidth = 8, 
+				rectWidth = 6, 
 				rectHeight = rectWidth,
 				ctx = app.ctx,
 				transitionDuration = 400,
@@ -360,7 +364,7 @@ class scatterplotCanvas{
 			elements.each(function(el, i) {	
 				// console.log(el, i, this);
 				const node = d3.select(this);
-				ctx.globalAlpha = 0.2;
+				ctx.globalAlpha = 0.4;
 				ctx.fillStyle = node.attr('fillStyle');
 				ctx.fillRect(node.attr('x'), node.attr('y'), node.attr('width'), node.attr('height'))
 			});
