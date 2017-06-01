@@ -1,8 +1,14 @@
 $chart-height:300px;
 $number-height: 15px;
 $chart-background:rgba(white,.95);
-$progress-bar-height:4px;
+$progress-bar-height:25px;
 $progress-bar-dot-height:8px;
+
+
+@keyframes progressBar{
+	0%{ width:0; }
+	100%{ width:100%; }
+}
 
 .graphic-wrapper{
 	max-width:650px;
@@ -108,33 +114,49 @@ $progress-bar-dot-height:8px;
     width: calc(100% - 360px);
 	height:$progress-bar-height;
 	position:relative;
-	background:#eaeaea;
+	// background:#eaeaea;
 	margin: 15px 0;
 
-	&__dot{
-		position:absolute;
-		top:0;
-		left:0;
-		height:$progress-bar-dot-height;
-		width: $progress-bar-dot-height;
-		border-radius:50%;
-		background:$trib-blue2;
-		transition:left 400ms ease;
-		margin: #{($progress-bar-dot-height - $progress-bar-height) / -2} 0 0 #{$progress-bar-dot-height / -2}
-	}
+	// Vertically centers text in bar
+	display: flex;
+    align-items: center;
+    justify-content: flex-start;
 
-	&__dot--pulse{
-		// This dot only is used for the playing animation;
-		display:none;
-	}
+	// &__dot{
+	// 	position:absolute;
+	// 	top:0;
+	// 	left:0;
+	// 	height:$progress-bar-dot-height;
+	// 	width: $progress-bar-dot-height;
+	// 	border-radius:50%;
+	// 	background:$trib-blue2;
+	// 	transition:left 400ms ease;
+	// 	margin: #{($progress-bar-dot-height - $progress-bar-height) / -2} 0 0 #{$progress-bar-dot-height / -2}
+	// }
+
+	// &__dot--pulse{
+	// 	// This dot only is used for the playing animation;
+	// 	display:none;
+	// }
 
 	&__bar{
 		position:absolute;
 		top:0;
 		left:0;
 		height:100%;
-		background:$trib-blue2;
-		transition:width 400ms ease;
+		background:rgba($trib-grey4, .4);
+		width: 0;
+
+		&.animating{
+			animation: progressBar 4500ms 1;
+		}
+	}
+
+	&__text{
+		@include sans-serif();
+		margin:0;
+		padding:0;
+		font-style:italic;
 	}
 
 }

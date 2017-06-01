@@ -13,11 +13,6 @@ function startUpPym(){
 	var pymChild = new pym.Child({});
 	pymChild.sendHeight();
 	pymChild.sendMessage('childLoaded');
-	// document.getElementById('methodology-link').addEventListener('click', function(e){
-	// 	e.preventDefault();
-	// 	var scrollTarget = e.target.href.split("#")[1] + "-methodology";
-	// 	pymChild.scrollParentTo(scrollTarget);	
-	// })
 }
 
 
@@ -36,13 +31,36 @@ let dataSets =[
 	}
 ];
 
+
+function triggerTimerBar(duration){
+	console.log("triggering bar")
+	// We're going to align the css transition timing or our progress bar with the play interval
+	const bar = document.querySelector('.progress-bar__bar');
+
+	bar.style.animationDuration = `${duration}ms`;
+
+	// start from zero, instantly
+	bar.classList.remove('animating');
+
+	// I'm just doing what Chris Coyier told me to do
+	// https://css-tricks.com/restart-css-animation/
+  	void bar.offsetWidth;
+
+	// Then transtion to fullWidth
+	bar.classList.add('animating');
+
+}
+
 function slideInstructions(slideNumber, brokenModel){
 	const 	bar = document.querySelector('.progress-bar__bar'),
-			dot = document.querySelector('.progress-bar__dot--static'),
-			pulseDot = document.querySelector('.progress-bar__dot--pulse'),
+			slidesLabel = document.querySelector('#slides-label'),
+			totalSlidesLabel = document.querySelector('#total-slides'),
+			// dot = document.querySelector('.progress-bar__dot--static'),
+			// pulseDot = document.querySelector('.progress-bar__dot--pulse'),
 			examples = document.querySelectorAll('.labels .example');
+			slidesLabel.innerHTML = `Slide ${slideNumber} of ${window.totalSlides}`;
 
-	bar.style.width = dot.style.left = pulseDot.style.left = `${100 / window.totalSlides * slideNumber}%`;
+	// bar.style.width = dot.style.left = pulseDot.style.left = `${100 / window.totalSlides * slideNumber}%`;
 	
 	switch (slideNumber) {
 		case 1:
@@ -90,7 +108,7 @@ function highlightRegressionLine(id){
 window.addEventListener('load', function(e){
 
 	startUpPym(); // Listen for the loaded event then run the pym stuff.
-	console.log('window.loaded');
+	console.log('window.loaded', window.totalSlides);
 
 	const dataQueue = q.queue();
 	dataSets.forEach(set => {
@@ -115,9 +133,12 @@ window.addEventListener('load', function(e){
 			}
 		});
         
-		// slideInstructions(1, brokenModel);
+        // Display the first slide
+		slideInstructions(1, brokenModel);
 
+		const playInterval = 4500; // This is the speed between slides while "playing"
 		const dataButtons = document.querySelectorAll('.data-button');
+
 		for (var button of dataButtons){
 			button.addEventListener('click', function(e){
 				const 	direction = e.target.dataset.direction,
@@ -126,28 +147,35 @@ window.addEventListener('load', function(e){
 								
 				if (direction == 'back'){
 					clickTrack('SCATTER: User clicked back');
+					// If we're at the beginning, then go no farther back, otherwise, move back one.
 					currentSlide = currentSlide - 1 > 0 ? currentSlide - 1 : 1;
+					console.log(window.totalSlides, currentSlide);
+					bodyElement.dataset.slide = currentSlide;
 				} else if ( direction == 'forward'){
 					clickTrack('SCATTER: User clicked fwd');
+					// If we're at the end, then reset to 1, else move ahead one slide
 					currentSlide = currentSlide + 1 > window.totalSlides ? 1 : currentSlide + 1;
+					bodyElement.dataset.slide = currentSlide;
+					console.log(window.totalSlides, currentSlide);
+
 				} else if (direction == "play") {
 					clickTrack('SCATTER: User clicked play');
 					document.querySelector('body').dataset.playing = true;
+					triggerTimerBar(playInterval);
 					const player = setInterval(function(){
 						if (document.querySelector('body').dataset.slide < window.totalSlides){
+							triggerTimerBar(playInterval);
 							document.querySelector(".data-button[data-direction='forward']").click();
 						} else {
 							document.querySelector('body').dataset.playing = false;
 							clearInterval(player);
 							console.log('cleared');
 						}
-					}, 4500)
+					}, playInterval)
 				} else {
 					// Reset back to scene 1
 					currentSlide = 1;
 				}
-
-				bodyElement.dataset.slide = currentSlide;
 				slideInstructions(currentSlide, brokenModel);
 			});
 		}
