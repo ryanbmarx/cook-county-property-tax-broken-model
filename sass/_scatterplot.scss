@@ -108,6 +108,12 @@ $progress-bar-dot-height:8px;
 	}
 }
 
+[data-direction = "play"]{
+	.stop-text, .stop-icon{
+		display:none;
+	}
+}
+
 .progress-bar{
 	float: left;
     width: 44%;
@@ -154,6 +160,15 @@ body[data-playing=true], body[data-playing="true"]{
 		background: $trib-blue2;
 		color:white;
 		transition: background 400ms ease; 
+		
+			.stop-text, .stop-icon{
+				display:inline;
+			}
+
+			.play-text, .play-icon{
+				display:none;
+			}
+
 	}
 }
 

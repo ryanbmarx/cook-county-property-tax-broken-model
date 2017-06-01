@@ -88,6 +88,9 @@ function slideInstructions(slideNumber, brokenModel){
 			brokenModel.plotDotsCanvas(1);
 			break;
 		case 5:
+			for (var example of examples){
+				example.classList.remove('example--visible');
+			}
 			highlightRegressionLine('2009')
 			brokenModel.plotDotsCanvas(1);
 			break;
@@ -108,7 +111,6 @@ function highlightRegressionLine(id){
 window.addEventListener('load', function(e){
 
 	startUpPym(); // Listen for the loaded event then run the pym stuff.
-	console.log('window.loaded', window.totalSlides);
 
 	const dataQueue = q.queue();
 	dataSets.forEach(set => {
@@ -117,7 +119,6 @@ window.addEventListener('load', function(e){
 
 	// Once all the d3-queue'ed datas are downloaded and ready to use, instantiate the scatter
 	dataQueue.awaitAll(function(error, data){
-		// console.log(error,data)
 		data.forEach((d, i) => {
 			dataSets[i].data = d;
 		});
@@ -141,41 +142,82 @@ window.addEventListener('load', function(e){
 
 		for (var button of dataButtons){
 			button.addEventListener('click', function(e){
-				const 	direction = e.target.dataset.direction,
+				const 	direction = this.dataset.direction,
 						bodyElement = document.querySelector('body');
 				let		currentSlide = parseInt(bodyElement.dataset.slide);
-								
-				if (direction == 'back'){
-					clickTrack('SCATTER: User clicked back');
-					// If we're at the beginning, then go no farther back, otherwise, move back one.
-					currentSlide = currentSlide - 1 > 0 ? currentSlide - 1 : 1;
-					console.log(window.totalSlides, currentSlide);
-					bodyElement.dataset.slide = currentSlide;
-				} else if ( direction == 'forward'){
-					clickTrack('SCATTER: User clicked fwd');
-					// If we're at the end, then reset to 1, else move ahead one slide
-					currentSlide = currentSlide + 1 > window.totalSlides ? 1 : currentSlide + 1;
-					bodyElement.dataset.slide = currentSlide;
-					console.log(window.totalSlides, currentSlide);
+				
+				console.log(this);
 
-				} else if (direction == "play") {
-					clickTrack('SCATTER: User clicked play');
-					document.querySelector('body').dataset.playing = true;
-					triggerTimerBar(playInterval);
-					const player = setInterval(function(){
-						if (document.querySelector('body').dataset.slide < window.totalSlides){
-							triggerTimerBar(playInterval);
-							document.querySelector(".data-button[data-direction='forward']").click();
+				switch(direction){
+					case 'back':
+						clickTrack('SCATTER: User clicked back');
+						// If we're at the beginning, then go to the last slide, otherwise, move back one.
+						currentSlide = currentSlide - 1 > 0 ? currentSlide - 1 : window.totalSlides;
+						bodyElement.dataset.slide = currentSlide;
+						break;
+
+					case 'forward':
+						clickTrack('SCATTER: User clicked fwd');
+						// If we're playing, and at the end, then kill playing and leave things
+						// where they are so the reader can read the final slide. If we're not 
+						// playing and at the end, then come back around to the first slide. Otherwise, 
+						// keep going.
+						if (currentSlide + 1 > window.totalSlides){
+								currentSlide = 1;
 						} else {
-							document.querySelector('body').dataset.playing = false;
-							clearInterval(player);
-							console.log('cleared');
+							// NOT AT THE END
+							currentSlide = currentSlide + 1;	
 						}
-					}, playInterval)
-				} else {
-					// Reset back to scene 1
-					currentSlide = 1;
-				}
+						bodyElement.dataset.slide = currentSlide;
+						break;
+
+					case 'play':
+						// track the click
+						clickTrack('SCATTER: User clicked play');
+						console.log('playing')
+						if (bodyElement.dataset.playing == true){
+						
+							// if the graphic ALREADY IS playing, then stop it, but leave the current 
+							// slide as is The button will read "stop" so this really is the stop button.
+							// bodyElement.dataset.playing = false;
+							// console.log('clearing');
+							clearInterval(player);
+							document.querySelector('body').dataset.playing = false;
+
+						} else {
+
+							// if the graphic is not playing, then reset to 1 and start playing
+							currentSlide = 1;
+							document.querySelector('body').dataset.playing = true;
+							triggerTimerBar(playInterval);
+							
+							// This timer will advance every <playInterval> milliseconds by similuating
+							// a click on the next button.
+							const player = setInterval(function(){
+								console.log(currentSlide, window.totalSlides, currentSlide < window.totalSlides)
+								if (parseInt(bodyElement.dataset.slide) < window.totalSlides){
+									console.log('keep intervaling');
+									// keep advancing if we are not at the last slide.
+									triggerTimerBar(playInterval);
+									document.querySelector(".data-button[data-direction='forward']").click();
+
+								} else {
+									
+									// Stop the timer when we reach the last slide.
+									bodyElement.dataset.playing = false;
+									clearInterval(this);
+									console.log('cleared');
+
+								}
+							}, playInterval);
+						}
+						break;
+					default:
+						// Otherwise, just head back to one.
+						currentSlide = 1;
+						bodyElement.dataset.slide = currentSlide;
+						break;
+				}				
 				slideInstructions(currentSlide, brokenModel);
 			});
 		}

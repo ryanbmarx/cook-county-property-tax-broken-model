@@ -228,9 +228,9 @@ class scatterplotCanvas{
 
 		// Add the two regression lines
 
-		// app.plotRegressionLine(app.data[0].data, 'HomePrice', 'Ratio', '2006')
-		// app.plotRegressionLine(app.data[1].data, 'HomePrice', 'Ratio', '2009')
-		// app.plotRegressionLine(app.data[2].data, 'HomePrice', 'Ratio', 'ideal')
+		app.plotRegressionLine(app.data[0].data, 'HomePrice', 'Ratio', '2006')
+		app.plotRegressionLine(app.data[1].data, 'HomePrice', 'Ratio', '2009')
+		app.plotRegressionLine(app.data[2].data, 'HomePrice', 'Ratio', 'ideal')
 
 
 		
