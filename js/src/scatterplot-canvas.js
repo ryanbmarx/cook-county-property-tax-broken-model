@@ -294,7 +294,7 @@ class scatterplotCanvas{
 		// app.plotDots(app.options.initialIndex
 		// console.log('ready to plot sqrs', canvas.node(), typeof(canvas));
 
-		app.plotDotsCanvas(app.options.initialIndex);
+		// app.plotDotsCanvas(app.options.initialIndex);
 
 
 	}
@@ -329,30 +329,32 @@ class scatterplotCanvas{
 				.attr('y', d => app.yScale(d.Ratio))
 				.attr('fillStyle', d => colorScale(d.Ratio))
 				.transition()
-				.duration(transitionDuration)
+				// .duration(transitionDuration)
 				.attr('width', rectWidth)
 				.attr('height', rectHeight);
 
 				
 
 			join
-				.attr('width', rectWidth)
-				.attr('height', rectHeight)
+				// .attr('width', rectWidth)
+				// .attr('height', rectHeight)
 				.transition()
-				.duration(transitionDuration)
+				// .duration(transitionDuration)
 				.attr('x', d => app.xScale(d.HomePrice) - (rectWidth / 2))
 				.attr('y', d => app.yScale(d.Ratio) - (rectHeight / 2))
 				.attr('fillStyle', d => colorScale(d.Ratio));
 			
 			const exitSet = join.exit()
 				  .transition()
-				  .duration(transitionDuration)
+				  // .duration(transitionDuration)
 				  .attr('width', 0)
 				  .attr('height', 0)
 				  .remove();
 		}
 
 		function drawData(){
+						console.log('drawing');
+
 			// console.log('drawing the sqrs');
 			// Start by clearing our "paint"
 			ctx.clearRect(0, 0, app.innerWidth, app.innerHeight); // Clear the canvas.
@@ -373,6 +375,7 @@ class scatterplotCanvas{
 		const t = d3.timer( function(elapsed){
 			// console.log(elapsed)
 			drawData();
+			console.log(elapsed);
 			if (elapsed > transitionDuration) t.stop();	
 		})
 		
