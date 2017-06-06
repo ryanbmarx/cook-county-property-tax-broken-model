@@ -353,7 +353,7 @@ class scatterplotCanvas{
 		}
 
 		function drawData(){
-						console.log('drawing');
+						// console.log('drawing');
 
 			// console.log('drawing the sqrs');
 			// Start by clearing our "paint"
@@ -375,7 +375,7 @@ class scatterplotCanvas{
 		const t = d3.timer( function(elapsed){
 			// console.log(elapsed)
 			drawData();
-			console.log(elapsed);
+			// console.log(elapsed);
 			if (elapsed > transitionDuration) t.stop();	
 		})
 		

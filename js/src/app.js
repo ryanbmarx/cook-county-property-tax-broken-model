@@ -33,7 +33,6 @@ let dataSets =[
 
 
 function triggerTimerBar(duration){
-	console.log("triggering bar")
 	// We're going to align the css transition timing or our progress bar with the play interval
 	const bar = document.querySelector('.progress-bar__bar');
 
@@ -146,7 +145,7 @@ window.addEventListener('load', function(e){
 						bodyElement = document.querySelector('body');
 				let		currentSlide = parseInt(bodyElement.dataset.slide);
 				
-				console.log(this);
+				// console.log(this);
 
 				switch(direction){
 					case 'back':
@@ -174,7 +173,7 @@ window.addEventListener('load', function(e){
 					case 'play':
 						// track the click
 						clickTrack('SCATTER: User clicked play');
-						console.log('playing')
+						// console.log('playing')
 						if (bodyElement.dataset.playing == true){
 						
 							// if the graphic ALREADY IS playing, then stop it, but leave the current 
@@ -194,9 +193,9 @@ window.addEventListener('load', function(e){
 							// This timer will advance every <playInterval> milliseconds by similuating
 							// a click on the next button.
 							const player = setInterval(function(){
-								console.log(currentSlide, window.totalSlides, currentSlide < window.totalSlides)
+								// console.log(currentSlide, window.totalSlides, currentSlide < window.totalSlides)
 								if (parseInt(bodyElement.dataset.slide) < window.totalSlides){
-									console.log('keep intervaling');
+									// console.log('keep intervaling');
 									// keep advancing if we are not at the last slide.
 									triggerTimerBar(playInterval);
 									document.querySelector(".data-button[data-direction='forward']").click();
@@ -206,7 +205,7 @@ window.addEventListener('load', function(e){
 									// Stop the timer when we reach the last slide.
 									bodyElement.dataset.playing = false;
 									clearInterval(this);
-									console.log('cleared');
+									// console.log('cleared');
 
 								}
 							}, playInterval);
