@@ -57,7 +57,7 @@
         {% endfor %}
         
 	</div>
-	<p class='chart_source'>{{scatter_source}}</p>
+	<p class='chart_source'>{{scatter_source|process_text()}}</p>
 </div>
  <script type="text/javascript" src="http://www.chicagotribune.com/hive/javascripts/metrics/s_code_trb.js"></script>
   {% omnitag request, OMNITURE, None, title, 'dataproject' %}
