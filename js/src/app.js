@@ -1,19 +1,15 @@
 import scatterplotCanvas from './scatterplot-canvas.js';
 import * as pym from 'pym.js';
 import * as q from 'd3-queue';
-import {csv} from 'd3';
+import {csv, selectAll} from 'd3';
 import clickTrack from './click-track.js';
 
 
-NodeList.prototype[Symbol.iterator] = Array.prototype[Symbol.iterator];
-HTMLCollection.prototype[Symbol.iterator] = Array.prototype[Symbol.iterator];
+// NodeList.prototype[Symbol.iterator] = Array.prototype[Symbol.iterator];
+// HTMLCollection.prototype[Symbol.iterator] = Array.prototype[Symbol.iterator];
 
 
-function startUpPym(){
-	var pymChild = new pym.Child({});
-	pymChild.sendHeight();
-	pymChild.sendMessage('childLoaded');
-}
+
 
 
 let dataSets =[
@@ -64,17 +60,16 @@ function slideInstructions(slideNumber, brokenModel){
 	switch (slideNumber) {
 		case 1:
 			// Fade in examples
-			for (var example of examples){
-				example.classList.add('example--visible');
-			}
+
+			
+			selectAll('.labels .example').classed('example--visible', true);
+			
 			highlightRegressionLine('none')
 			brokenModel.plotDotsCanvas(2);
 			break;
 		case 2:
 			// Fade out examples
-			for (var example of examples){
-				example.classList.remove('example--visible');
-			}
+			selectAll('.labels .example').classed('example--visible', false);
 			highlightRegressionLine('none')
 			brokenModel.plotDotsCanvas(0);
 			break;
@@ -87,9 +82,7 @@ function slideInstructions(slideNumber, brokenModel){
 			brokenModel.plotDotsCanvas(1);
 			break;
 		case 5:
-			for (var example of examples){
-				example.classList.remove('example--visible');
-			}
+			selectAll('.labels .example').classed('example--visible', false);
 			highlightRegressionLine('2009')
 			brokenModel.plotDotsCanvas(1);
 			break;
@@ -98,8 +91,10 @@ function slideInstructions(slideNumber, brokenModel){
 function highlightRegressionLine(id){
 	
 	const lines = document.querySelectorAll('.regression-line');
-	for (var line of lines){
-		if (line.classList.contains(`regression-line--${id}`)){
+	for (var lineCounter=0; lineCounter<lines.length; lineCounter++){
+		const line = lines[lineCounter];
+		console.log(lines, line, line.dataset, line.getAttribute('data-regression-line'));
+		if (line.getAttribute('data-regression-line') == `regression-line--${id}` ){
 			line.style.opacity = 1;
 		} else {
 			line.style.opacity = 0;
@@ -108,9 +103,13 @@ function highlightRegressionLine(id){
 }
 
 window.addEventListener('load', function(e){
+	
+	// Listen for the loaded event then run the pym stuff.
 
-	startUpPym(); // Listen for the loaded event then run the pym stuff.
-
+	var pymChild = new pym.Child({});
+		pymChild.sendHeight();
+		pymChild.sendMessage('childLoaded');
+		
 	const dataQueue = q.queue();
 	dataSets.forEach(set => {
 		dataQueue.defer(csv,set.url);
@@ -139,7 +138,11 @@ window.addEventListener('load', function(e){
 		const playInterval = 4500; // This is the speed between slides while "playing"
 		const dataButtons = document.querySelectorAll('.data-button');
 
-		for (var button of dataButtons){
+		
+		for (var buttonCounter=0; buttonCounter < dataButtons.length; buttonCounter++){
+			
+			const button = dataButtons[buttonCounter];
+			
 			button.addEventListener('click', function(e){
 				const 	direction = this.dataset.direction,
 						bodyElement = document.querySelector('body');
