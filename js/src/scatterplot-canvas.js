@@ -436,6 +436,7 @@ class scatterplotCanvas{
 		d3.select('.regression-lines').append("path")
 			.classed('regression-line', true)
 			.classed(`regression-line--${lineID}`, true)
+			.attr('data-regression-line', `regression-line--${lineID}`)
 	        .datum(data)
 	        .style('stroke', getTribColors('trib-grey2'))
 	        .style('stroke-width', 2)
